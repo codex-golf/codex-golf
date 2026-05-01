@@ -1,0 +1,1 @@
+for i=1,100 do print(if i%15<1 then"FizzBuzz"elseif i%3<1 then"Fizz"elseif i%5<1 then"Buzz"else i)end

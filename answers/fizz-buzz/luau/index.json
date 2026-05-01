@@ -1,0 +1,19 @@
+{
+  "best": "3a9ef137aae6a7e0",
+  "entries": [
+    {
+      "bytes": 101,
+      "chars": 101,
+      "id": "3a9ef137aae6a7e0",
+      "merged_at": "2026-05-01T08:50:40Z",
+      "meta": "answers/fizz-buzz/luau/3a9ef137aae6a7e0.meta.json",
+      "path": "answers/fizz-buzz/luau/3a9ef137aae6a7e0.luau",
+      "pr": 42,
+      "sha256": "3a9ef137aae6a7e05189dfc28b4b32de51224c1eb1428fe0a0bde9ee5b03c592",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "luau",
+  "schema": "codex-golf.index.v1"
+}

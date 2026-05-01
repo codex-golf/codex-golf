@@ -337,6 +337,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "lua"
     },
     {
+      "best": "3a9ef137aae6a7e0",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/luau/index.json",
+      "lang": "luau"
+    },
+    {
       "best": "3dd1d33c0b89b1b6",
       "count": 1,
       "hole": "fizz-buzz",
