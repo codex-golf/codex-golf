@@ -288,6 +288,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "hexagony"
     },
     {
+      "best": "11ab2e5f18d4edd6",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/iogii/index.json",
+      "lang": "iogii"
+    },
+    {
       "best": "4d186b0ce1fa907e",
       "count": 1,
       "hole": "fizz-buzz",
