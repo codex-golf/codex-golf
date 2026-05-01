@@ -169,6 +169,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "coconut"
     },
     {
+      "best": "20948f752da0af8c",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/coffeescript/index.json",
+      "lang": "coffeescript"
+    },
+    {
       "best": "1e6e804b4429411c",
       "count": 1,
       "hole": "fizz-buzz",

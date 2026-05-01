@@ -1,0 +1,1 @@
+console.log(if i%15<1 then"FizzBuzz"else if i%3<1 then"Fizz"else if i%5<1 then"Buzz"else i)for i in[1..100]
