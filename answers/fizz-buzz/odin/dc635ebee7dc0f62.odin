@@ -1,0 +1,1 @@
+package m;import"core:fmt";main::proc(){for i in 1..=100{if i%3<1{fmt.print("Fizz")}if i%5<1{fmt.print("Buzz")}if i%3>0&&i%5>0{fmt.print(i)}fmt.println()}}

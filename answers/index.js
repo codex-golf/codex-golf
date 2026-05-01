@@ -449,6 +449,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "ocaml"
     },
     {
+      "best": "dc635ebee7dc0f62",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/odin/index.json",
+      "lang": "odin"
+    },
+    {
       "best": "8a20943d66bf4c6f",
       "count": 1,
       "hole": "fizz-buzz",
