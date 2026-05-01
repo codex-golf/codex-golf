@@ -169,14 +169,14 @@ jobs:
           set -e
           if [ "$RC" = 0 ]; then
             python3 - "$SHA256" /tmp/index.json <<'PY'
-            import json, sys
-            sha = sys.argv[1]
-            index = json.load(open(sys.argv[2]))
-            for entry in index.get('entries', []):
-                if entry.get('sha256') == sha:
-                    print(f"::error::answer already archived as {entry.get('id')}")
-                    sys.exit(1)
-            PY
+          import json, sys
+          sha = sys.argv[1]
+          index = json.load(open(sys.argv[2]))
+          for entry in index.get('entries', []):
+              if entry.get('sha256') == sha:
+                  print(f"::error::answer already archived as {entry.get('id')}")
+                  sys.exit(1)
+          PY
           fi
 
       - name: Emit verdict (success)
