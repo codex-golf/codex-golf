@@ -2,7 +2,7 @@ name: Merge on Verify
 
 # Trusted side: triggered by Verify PR completion. Runs on default branch (main),
 # so PR cannot tamper with this workflow. Has write token, validates the verdict
-# artifact against ground truth from GitHub API, then labels / comments / merges.
+# artifact against ground truth from GitHub API, then labels / comments / archives.
 
 on:
   workflow_run:
@@ -28,13 +28,26 @@ jobs:
 
     steps:
       - name: Download verdict artifact
-        id: dl
         uses: actions/download-artifact@v4
         with:
           name: verdict
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: verdict
+
+      - name: Checkout main scripts
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+          fetch-depth: 1
+
+      - name: Checkout solutions
+        uses: actions/checkout@v4
+        with:
+          ref: solutions
+          path: solutions
+          fetch-depth: 1
 
       - name: Parse + validate verdict against ground truth
         id: gt
@@ -49,13 +62,12 @@ jobs:
           jq . "$V"
 
           SCHEMA=$(jq -r .schema "$V")
-          [ "$SCHEMA" = "codex-golf.verdict.v1" ] || { echo "::error::bad schema: $SCHEMA"; exit 1; }
+          [ "$SCHEMA" = "codex-golf.verdict.v2" ] || { echo "::error::bad schema: $SCHEMA"; exit 1; }
 
           STATUS=$(jq -r .status "$V")
           PR=$(jq -r .pr_number "$V")
           V_HEAD=$(jq -r .head_sha "$V")
 
-          # Pull ground truth from GitHub API. Trust nothing in artifact except as a hint.
           GT=$(gh api "/repos/$REPO/pulls/$PR")
           GT_HEAD=$(echo "$GT" | jq -r .head.sha)
           GT_BASE_REF=$(echo "$GT" | jq -r .base.ref)
@@ -66,7 +78,6 @@ jobs:
           [ "$GT_BASE_REF" = "solutions" ]      || { echo "::error::PR base is $GT_BASE_REF, not solutions"; exit 1; }
           [ "$GT_HEAD" = "$V_HEAD" ]            || { echo "::error::PR head sha mismatch: GT=$GT_HEAD verdict=$V_HEAD"; exit 1; }
 
-          # If verify workflow itself failed, mirror that as fail (post fail label/comment).
           if [ "$WF_RUN_CONCLUSION" != "success" ] || [ "$STATUS" != "pass" ]; then
             echo "result=fail" >> "$GITHUB_OUTPUT"
           else
@@ -74,45 +85,13 @@ jobs:
           fi
           echo "pr=$PR" >> "$GITHUB_OUTPUT"
           echo "author=$GT_AUTHOR" >> "$GITHUB_OUTPUT"
-          # Pass-through fields needed for merge / comment
           jq -r '
             "hole="    + (.hole    // "?"),
             "lang="    + (.lang    // "?"),
             "bytes="   + ((.bytes  // 0) | tostring),
-            "old="     + (.old     // "?"),
             "file="    + (.file    // "?"),
             "run_url=" + (.run_url // "?")
           ' "$V" >> "$GITHUB_OUTPUT"
-
-      - name: Re-check race-safe (pass only)
-        if: steps.gt.outputs.result == 'pass'
-        id: race
-        env:
-          GH_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
-          REPO:      ${{ github.repository }}
-          FILE:      ${{ steps.gt.outputs.file }}
-          NEW_BYTES: ${{ steps.gt.outputs.bytes }}
-        run: |
-          set -euo pipefail
-          # Race-safe: check origin/solutions content via Contents API, not stale verdict.
-          # Use the JSON API's .size field. A 404 must mean "no prior file";
-          # do NOT treat the 404 error JSON as raw file content.
-          set +e
-          CUR_BYTES=$(gh api "/repos/$REPO/contents/$FILE?ref=solutions" --jq '.size' 2>/tmp/contents.err)
-          RC=$?
-          set -e
-          if [ "$RC" = 0 ] && [ -n "$CUR_BYTES" ] && [ "$CUR_BYTES" != "null" ]; then
-            echo "Current best on solutions: $CUR_BYTES bytes"
-            echo "Submitted: $NEW_BYTES bytes"
-            if [ "$NEW_BYTES" -ge "$CUR_BYTES" ]; then
-              echo "::error::race lost: someone else got there first ($NEW_BYTES >= $CUR_BYTES)"
-              echo "race_ok=false" >> "$GITHUB_OUTPUT"
-              exit 1
-            fi
-          else
-            echo "No prior file on solutions"
-          fi
-          echo "race_ok=true" >> "$GITHUB_OUTPUT"
 
       - name: Ensure labels exist
         env:
@@ -121,30 +100,62 @@ jobs:
         run: |
           gh label create verify-pass --repo "$REPO" --color 2EA44F --description "Verification passed" || true
           gh label create verify-fail --repo "$REPO" --color D73A4A --description "Verification failed" || true
+          gh label create archive-duplicate --repo "$REPO" --color B08800 --description "Answer already archived" || true
 
-      - name: Apply pass label + comment + merge
-        if: steps.gt.outputs.result == 'pass' && steps.race.outputs.race_ok == 'true'
+      - name: Archive answer on solutions
+        if: steps.gt.outputs.result == 'pass'
+        id: archive
+        working-directory: solutions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          VERIFY_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          set -euo pipefail
+          python3 ../main/scripts/archive_merge.py ../verdict/verdict.json
+
+      - name: Apply archive labels + comment
+        if: steps.gt.outputs.result == 'pass' && steps.archive.outputs.result == 'archived'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO:    ${{ github.repository }}
           PR:      ${{ steps.gt.outputs.pr }}
-          HOLE:    ${{ steps.gt.outputs.hole }}
-          LANG:    ${{ steps.gt.outputs.lang }}
-          BYTES:   ${{ steps.gt.outputs.bytes }}
-          OLD:     ${{ steps.gt.outputs.old }}
-          AUTHOR:  ${{ steps.gt.outputs.author }}
+          HOLE:    ${{ steps.archive.outputs.hole }}
+          LANG:    ${{ steps.archive.outputs.lang }}
+          BYTES:   ${{ steps.archive.outputs.bytes }}
+          ID:      ${{ steps.archive.outputs.id }}
+          BEST:    ${{ steps.archive.outputs.best_result }}
+          PREV:    ${{ steps.archive.outputs.previous_best_bytes }}
+          PATH:    ${{ steps.archive.outputs.path }}
         run: |
           set -euo pipefail
           gh pr edit "$PR" --repo "$REPO" --remove-label verify-fail || true
-          gh pr edit "$PR" --repo "$REPO" --add-label    verify-pass || true
+          gh pr edit "$PR" --repo "$REPO" --remove-label archive-duplicate || true
+          gh pr edit "$PR" --repo "$REPO" --add-label verify-pass || true
+          if [ "$BEST" = "new_best" ]; then
+            RESULT="new best (previous: ${PREV})"
+          else
+            RESULT="archived; best unchanged"
+          fi
           gh pr comment "$PR" --repo "$REPO" \
-            --body "✅ **$HOLE / $LANG** passed: **${BYTES}B** (was: ${OLD}). Auto-merging."
-          gh pr merge "$PR" \
-            --repo "$REPO" \
-            --squash \
-            --delete-branch=false \
-            --subject "$HOLE/$LANG: ${BYTES}B by $AUTHOR (was: $OLD)" \
-            --body "Auto-merged by codex.golf merge-on-verify. Passed verification, ${BYTES} bytes."
+            --body "✅ **$HOLE / $LANG** passed and archived as \`$ID\` (**${BYTES}B**): $RESULT.\n\nPath: \`$PATH\`."
+
+      - name: Apply duplicate label + comment
+        if: steps.gt.outputs.result == 'pass' && steps.archive.outputs.result == 'duplicate'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO:    ${{ github.repository }}
+          PR:      ${{ steps.gt.outputs.pr }}
+          HOLE:    ${{ steps.archive.outputs.hole }}
+          LANG:    ${{ steps.archive.outputs.lang }}
+          ID:      ${{ steps.archive.outputs.id }}
+        run: |
+          set -euo pipefail
+          gh pr edit "$PR" --repo "$REPO" --remove-label verify-pass || true
+          gh pr edit "$PR" --repo "$REPO" --add-label archive-duplicate || true
+          gh pr comment "$PR" --repo "$REPO" \
+            --body "⚠️ **$HOLE / $LANG** already archived as \`$ID\`. No solutions change was made."
+          gh pr close "$PR" --repo "$REPO" || true
 
       - name: Apply fail label + comment
         if: steps.gt.outputs.result == 'fail'
@@ -156,6 +167,7 @@ jobs:
         run: |
           set -euo pipefail
           gh pr edit "$PR" --repo "$REPO" --remove-label verify-pass || true
-          gh pr edit "$PR" --repo "$REPO" --add-label    verify-fail || true
+          gh pr edit "$PR" --repo "$REPO" --remove-label archive-duplicate || true
+          gh pr edit "$PR" --repo "$REPO" --add-label verify-fail || true
           gh pr comment "$PR" --repo "$REPO" \
             --body "❌ Verification failed. See run log: $RUN_URL"

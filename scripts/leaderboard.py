@@ -1,20 +1,31 @@
 #!/usr/bin/env python3
-"""Generate LEADERBOARD.md from answers/<hole>/<lang>/answer.<ext>.
+"""Generate LEADERBOARD.md from archive indexes.
 
 Usage: scripts/leaderboard.py <solutions-checkout> <output-file>
 
 Reads:
-- <solutions-checkout>/answers/<hole>/<lang>/answer.<ext>
-- <solutions-checkout>/verify/langs.json (lang -> ext mapping; lookup only)
+- <solutions-checkout>/answers/<hole>/<lang>/index.json
+- <solutions-checkout>/answers/<hole>/<lang>/best
 
 Writes: <output-file> (markdown).
 """
 import json
 import os
-import subprocess
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
+
+
+def load_json(path):
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def entry_label(entry):
+    pr = entry.get("pr")
+    if pr:
+        return f"PR #{pr} / `{entry['id']}`"
+    return f"`{entry['id']}`"
 
 
 def main():
@@ -23,17 +34,15 @@ def main():
         sys.exit(2)
     root = sys.argv[1]
     out_path = sys.argv[2]
-
     answers_dir = os.path.join(root, "answers")
     if not os.path.isdir(answers_dir):
         print(f"no answers/ dir at {answers_dir}", file=sys.stderr)
         sys.exit(1)
 
-    # by_hole[hole] -> list of (lang, bytes)
-    # by_lang[lang] -> list of (hole, bytes)
     by_hole = defaultdict(list)
     by_lang = defaultdict(list)
-    total = 0
+    recent = []
+    total_archived = 0
 
     for hole in sorted(os.listdir(answers_dir)):
         hole_dir = os.path.join(answers_dir, hole)
@@ -41,97 +50,69 @@ def main():
             continue
         for lang in sorted(os.listdir(hole_dir)):
             lang_dir = os.path.join(hole_dir, lang)
-            if not os.path.isdir(lang_dir):
+            index_path = os.path.join(lang_dir, "index.json")
+            best_path = os.path.join(lang_dir, "best")
+            if not os.path.isfile(index_path) or not os.path.isfile(best_path):
                 continue
-            answers = [f for f in os.listdir(lang_dir) if f.startswith("answer.")]
-            if not answers:
+            index = load_json(index_path)
+            entries = index.get("entries", [])
+            total_archived += len(entries)
+            by_id = {entry["id"]: entry for entry in entries}
+            with open(best_path, encoding="utf-8") as f:
+                best_id = f.read().strip()
+            best = by_id.get(best_id)
+            if not best:
                 continue
-            ans = os.path.join(lang_dir, answers[0])
-            try:
-                size = os.path.getsize(ans)
-            except OSError:
-                continue
-            by_hole[hole].append((lang, size))
-            by_lang[lang].append((hole, size))
-            total += 1
+            by_hole[hole].append((lang, best["bytes"], best_id))
+            by_lang[lang].append((hole, best["bytes"], best_id))
+            recent.extend(entries)
 
-    # Recent submissions: git log on answers/
-    recent = []
-    try:
-        log = subprocess.check_output(
-            [
-                "git", "-C", root, "log",
-                "--pretty=format:%h\t%aI\t%s",
-                "--name-only",
-                "-n", "60",
-                "--",
-                "answers",
-            ],
-            text=True,
-        )
-        cur = None
-        for line in log.splitlines():
-            if not line:
-                if cur and cur.get("file"):
-                    recent.append(cur)
-                cur = None
-                continue
-            if cur is None:
-                parts = line.split("\t", 2)
-                if len(parts) == 3:
-                    cur = {"sha": parts[0], "date": parts[1], "msg": parts[2], "file": None}
-            else:
-                if line.startswith("answers/") and cur and cur.get("file") is None:
-                    cur["file"] = line
-        if cur and cur.get("file"):
-            recent.append(cur)
-    except subprocess.CalledProcessError:
-        pass
+    recent.sort(key=lambda e: (e.get("merged_at") or "", e.get("id") or ""), reverse=True)
     recent = recent[:30]
 
-    # Render markdown
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    best_total = sum(len(v) for v in by_hole.values())
     lines = [
         "# codex.golf leaderboard",
         "",
-        f"**Auto-generated** \u2014 {now}",
+        f"**Auto-generated** — {now}",
         "",
-        f"Total entries: **{total}** \u00b7 holes: **{len(by_hole)}** \u00b7 langs: **{len(by_lang)}**",
+        f"Best entries: **{best_total}** · archived entries: **{total_archived}** · holes: **{len(by_hole)}** · langs: **{len(by_lang)}**",
         "",
-        "## By hole",
+        "## Best by hole",
         "",
     ]
+
     for hole in sorted(by_hole):
         entries = sorted(by_hole[hole], key=lambda e: (e[1], e[0]))
-        lines.append(f"### `{hole}`")
-        lines.append("")
-        lines.append("| lang | bytes |")
-        lines.append("|------|------:|")
-        for lang, size in entries:
-            lines.append(f"| `{lang}` | {size} |")
+        lines += [f"### `{hole}`", "", "| lang | bytes | entry |", "|------|------:|-------|"]
+        for lang, size, answer_id in entries:
+            lines.append(f"| `{lang}` | {size} | `{answer_id}` |")
         lines.append("")
 
-    lines += ["## By lang", ""]
+    lines += ["## Best by lang", ""]
     for lang in sorted(by_lang):
         entries = sorted(by_lang[lang], key=lambda e: (e[1], e[0]))
-        lines.append(f"### `{lang}`")
-        lines.append("")
-        lines.append("| hole | bytes |")
-        lines.append("|------|------:|")
-        for hole, size in entries:
-            lines.append(f"| `{hole}` | {size} |")
+        lines += [f"### `{lang}`", "", "| hole | bytes | entry |", "|------|------:|-------|"]
+        for hole, size, answer_id in entries:
+            lines.append(f"| `{hole}` | {size} | `{answer_id}` |")
         lines.append("")
 
     if recent:
-        lines += ["## Recent submissions", "", "| commit | date | submission |", "|--------|------|------------|"]
-        for r in recent:
-            short_date = r["date"][:10]
-            lines.append(f"| `{r['sha']}` | {short_date} | {r['msg']} |")
+        lines += ["## Recent accepted entries", "", "| merged | hole | lang | bytes | result | entry |", "|--------|------|------|------:|--------|-------|"]
+        for entry in recent:
+            merged = (entry.get("merged_at") or "")[:10]
+            result = "best" if entry.get("was_best") else "archive"
+            lines.append(
+                f"| {merged} | `{entry.get('path','').split('/')[1] if entry.get('path') else '?'}` | "
+                f"`{entry.get('path','').split('/')[2] if entry.get('path') else '?'}` | "
+                f"{entry.get('bytes')} | {result} | {entry_label(entry)} |"
+            )
         lines.append("")
 
-    with open(out_path, "w") as f:
+    with open(out_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
-    print(f"wrote {out_path} ({total} entries)", file=sys.stderr)
+    print(f"wrote {out_path} ({best_total} best, {total_archived} archived)", file=sys.stderr)
 
 
 if __name__ == "__main__":

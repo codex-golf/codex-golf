@@ -1,10 +1,7 @@
 name: Reverify all
 
-# Periodically re-verify every entry in solutions/answers/ against current
-# upstream config/hole-answers/. Catches:
-# - upstream changing expected output
-# - lang docker image regressions
-# - our verifier regressing on an existing PASS
+# Periodically re-verify every archived entry in solutions/answers/ against
+# current upstream judging code.
 
 on:
   schedule:
@@ -46,48 +43,12 @@ jobs:
           path: upstream
           fetch-depth: 1
 
-      - name: Reverify every answer
+      - name: Reverify every archived answer
         id: run
         run: |
-          set -uo pipefail
+          set -euo pipefail
           chmod +x main/verify/run.sh
-
-          PASS=0
-          FAIL=0
-          : > /tmp/regressions.md
-          shopt -s nullglob
-
-          for hole_dir in solutions/answers/*/; do
-            HOLE="$(basename "$hole_dir")"
-            for lang_dir in "$hole_dir"*/; do
-              LANG="$(basename "$lang_dir")"
-              for ans in "$lang_dir"answer.*; do
-                FILE="${ans#solutions/}"
-
-                if OUT="$(main/verify/run.sh "$HOLE" "$LANG" "$ans" "upstream" 2>&1)"; then
-                  PASS=$((PASS+1))
-                  echo "[PASS] $HOLE/$LANG"
-                else
-                  FAIL=$((FAIL+1))
-                  echo "[FAIL] $HOLE/$LANG"
-                  {
-                    echo "### \`$HOLE / $LANG\`"
-                    echo
-                    echo "File: \`$FILE\`"
-                    echo
-                    echo '```'
-                    echo "$OUT" | head -40
-                    echo '```'
-                    echo
-                  } >> /tmp/regressions.md
-                fi
-              done
-            done
-          done
-
-          echo "PASS=$PASS, FAIL=$FAIL"
-          echo "pass=$PASS" >> "$GITHUB_OUTPUT"
-          echo "fail=$FAIL" >> "$GITHUB_OUTPUT"
+          python3 main/scripts/reverify_archive.py solutions main upstream /tmp/regressions.md
 
       - name: File regression issue
         if: steps.run.outputs.fail != '0'

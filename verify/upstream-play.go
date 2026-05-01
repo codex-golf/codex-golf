@@ -46,6 +46,12 @@ func main() {
 		fmt.Fprintf(os.Stderr, "::error::read %s: %v\n", file, err)
 		os.Exit(66)
 	}
+	// Keep parity with upstream POST /solution. We call hole.Play() directly,
+	// so the HTTP handler's code-size gate would otherwise be bypassed.
+	if len(codeBytes) >= 128*1024 {
+		fmt.Fprintln(os.Stderr, "::error::solution too large: code must be <128KiB")
+		os.Exit(65)
+	}
 	code := string(codeBytes)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)

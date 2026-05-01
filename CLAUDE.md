@@ -16,22 +16,23 @@ Fork of `code-golf/code-golf`. Three branches with strict separation of concerns
 
   `main` does **not** carry `answers/` and does **not** carry the `pull_request` workflow trigger. When upstream code is needed, workflows checkout `master` separately and pass that checkout to `verify/run.sh`.
 
-- **`solutions`** — **answers + verify trigger**, also based on the shared empty root commit:
-  - `answers/<hole>/<lang>/answer.<ext>`     — submitted solutions
+- **`solutions`** — **archived answers + verify trigger**, also based on the shared empty root commit:
+  - `answers/<hole>/<lang>/<id>.<ext>` plus `<id>.meta.json`, `best`, and `index.json`
   - `.github/workflows/verify-pr.yml`        — thin trigger; checks out `main` for scripts and `master` for upstream code
 
-  PRs target this branch. `solutions` should not carry verifier implementation files.
+  PRs target this branch and still submit a staging `answers/<hole>/<lang>/answer.<ext>` file. Trusted merge converts that staging path into the archive layout. `solutions` should not carry verifier implementation files.
 
 ## Hard rules
 
 0. **Minimize code changes.** Before adding new verifier/project logic, first look for the upstream code path and call it directly. Prefer a thin wrapper over reimplementing behavior.
 1. **Always read project-local `CLAUDE.md` first** when working in a repo that has one. It is the project contract for agents.
-2. **Never modify upstream files.** Anything that exists in upstream stays untouched on every branch unless Bond explicitly approves an upstream sync/conflict resolution.
-3. **Disable upstream workflows via Settings**, not by editing their `.yml`.
-4. **`master` carries no overlay.** Not even README/CLAUDE.
-5. **`main` carries no `answers/` and no `pull_request` workflow.** It is not merged into `solutions`; `solutions` checks out `main` explicitly for scripts.
-6. **`solutions` carries the workflow trigger and `answers/`** but its workflow body is just a thin shell that checks out `main`, checks out `master` as upstream source, and calls `main/verify/run.sh`. No verifier logic on `solutions`.
-7. PRs are opened against `solutions`.
+2. **Follow Karpathy Guidelines for coding work.** Apply the behavioral rules from [`karpathy-guidelines`](https://github.com/forrestchang/andrej-karpathy-skills/blob/main/skills/karpathy-guidelines/SKILL.md): state assumptions, surface uncertainty, choose simplicity first, make surgical changes only, avoid speculative abstractions, and define verifiable success criteria before multi-step implementation.
+3. **Never modify upstream files.** Anything that exists in upstream stays untouched on every branch unless Bond explicitly approves an upstream sync/conflict resolution.
+4. **Disable upstream workflows via Settings**, not by editing their `.yml`.
+5. **`master` carries no overlay.** Not even README/CLAUDE.
+6. **`main` carries no `answers/` and no `pull_request` workflow.** It is not merged into `solutions`; `solutions` checks out `main` explicitly for scripts.
+7. **`solutions` carries the workflow trigger and `answers/`** but its workflow body is just a thin shell that checks out `main`, checks out `master` as upstream source, and calls `main/verify/run.sh`. No verifier logic on `solutions`.
+8. PRs are opened against `solutions`.
 
 ## Re-syncing with upstream
 
@@ -183,9 +184,9 @@ Two workflows, **untrusted/trusted split** to handle fork PRs whose
 - Trigger: `pull_request` to `solutions` touching `answers/**`
 - Permissions: read-only (`contents: read`, `pull-requests: read`)
 - Three checkouts: `pr/` (PR head, untrusted), `main/` (verifier scripts), `upstream/` (upstream master with `config/hole-answers/`)
-- Hard-guard: PR must change exactly 1 file matching `^answers/<hole>/<lang>/answer\.<ext>$`, status A|M, commits ≤ 5, size ≤ 16384B
+- Hard-guard: PR must change exactly 1 file matching `^answers/<hole>/<lang>/answer\.<ext>$`, status A|M, commits ≤ 5; `verify/upstream-play.go` enforces upstream `/solution` parity (`code < 128KiB`) before calling `hole.Play()`
 - Calls `main/verify/run.sh <hole> <lang> pr/<file> upstream`
-- On success/failure: writes `verdict.json` (schema `codex-golf.verdict.v1`) and uploads as artifact
+- On success/failure: writes `verdict.json` (schema `codex-golf.verdict.v2`) and uploads as artifact
 - **Does not** label / comment / merge — fork tokens can't, and we don't trust this side anyway
 
 ### `main/.github/workflows/merge-on-verify.yml` — trusted side
@@ -198,8 +199,10 @@ Two workflows, **untrusted/trusted split** to handle fork PRs whose
   - PR is open, base ref == `solutions`
   - PR head sha matches verdict head sha
   - Verify workflow conclusion was `success` AND verdict status is `pass`
-- Race-safe re-check: fetch current file on `solutions` via Contents API, ensure new bytes < current best
-- Labels (`verify-pass` / `verify-fail`), posts comment, `gh pr merge --squash` on pass
+- Recomputes answer bytes/chars/sha256 from the PR head; verdict fields are hints, not authority
+- Rejects exact duplicate sha256 entries; otherwise archives the answer even if it is not shorter than current best
+- Labels (`verify-pass` / `verify-fail` / `archive-duplicate`) and posts comments
+- On pass, creates a transformed merge commit: parents are current `solutions` and the PR head, while the tree stores archive layout (`<id>.<ext>`, `<id>.meta.json`, `best`, `index.json`) instead of the staging `answer.<ext>`
 - Concurrency: `merge-on-verify` (global serial) to avoid races on `solutions`
 
 ### Official runner wrapper (in `verify/run.sh`)
@@ -215,10 +218,10 @@ Two workflows, **untrusted/trusted split** to handle fork PRs whose
 ### Auto-merge gates
 
 All must hold:
-1. PR validation passes (single file, regex, size, commits)
-2. Official `hole.Play` returns pass for every generated run
-3. New bytes < current best on `origin/solutions` (re-checked twice: once during verify, once in merger)
-4. PR is still open and base is still `solutions` at merge time
+1. PR validation passes (single file, regex, commits)
+2. Upstream parity guard accepts the code size (`<128KiB`), then official `hole.Play` returns pass for every generated run
+3. Full sha256 is not already archived for that `(hole, lang)`
+4. PR is still open, base is still `solutions`, and head sha still matches the verdict at merge time
 
 ## Adding a language
 
@@ -247,43 +250,38 @@ Then merge `main` → `solutions`. The new lang is live for the next PR.
 
 1. ~~**Multi-language**~~ — done. 87 langs (all upstream langs/ ∩ docker hub). End-to-end
    tested via PRs #1, #2, #3.
-2. **Multi-answer storage** *(deferred, design only)*. Currently we keep one
-   answer per `(hole, lang)`: the shortest. Future plan to store every PASS and
-   celebrate every improvement, not just the final best:
-   - PRs still submit `answers/<hole>/<lang>/answer.<ext>` for simple review.
-   - At trusted merge time, the merger renames the submitted answer to a stable
-     content-addressed file: `answers/<hole>/<lang>/<sha>.<ext>` (sha = content
-     sha-256 first 12+ chars). This prevents duplicates and merge conflicts.
-   - Store metadata next to the answer as `answers/<hole>/<lang>/<sha>.<ext>.md`
-     (or equivalent structured sidecar if we later need machine parsing). Include:
-     `author`, `submitted_at`, `merged_at`, `pr`, `commit`, `bytes`, `chars`,
-     `sha256`, `was_best`, `previous_best_sha`, `previous_best_bytes`,
-     `previous_best_chars`, `improvement_bytes`, `improvement_chars`, and the
-     repository best bytes/chars at submission time.
-   - Pointer: `answers/<hole>/<lang>/best` contains the current shortest sha;
-     optional `answers/<hole>/<lang>/index.json` can list all accepted entries
-     for leaderboard/history generation.
-   - Verifier accepts a new answer if it (a) passes verify and either
-     (b₁) is shorter than current `best`, or (b₂) is within an accepted archive
-     window and not byte-equal to an existing entry. The exact archive window is
-     a policy decision; do not make it too broad until storage/UI is ready.
-   - Merger must update `best` only when the new answer improves bytes/chars,
-     but it may still archive non-best accepted entries for diversity/history.
-   - Migration: existing `answer.<ext>` becomes `<sha>.<ext>` + `<sha>.<ext>.md`
-     + `best` pointer.
-   - **Not implemented yet** — needs merger rewrite and leaderboard/reverify
-     updates. Keep the current one-PR/one-shortest-improvement model until the
-     fork-PR harness can safely test this merge-time rename behavior.
+2. **Multi-answer storage** *(in progress)*.
+   Goal: archive every verified, non-duplicate answer while keeping one clear
+   best pointer per `(hole, lang)`.
+   - Contributors still submit exactly one staging file:
+     `answers/<hole>/<lang>/answer.<ext>`.
+   - Trusted merge converts that staging file into archive files:
+     `answers/<hole>/<lang>/<id>.<ext>`, `<id>.meta.json`, `best`, and
+     `index.json`; `id = sha256(answer_bytes)[:16]`, with full sha256 in metadata.
+   - Accept if official verification passes and the full sha256 is not already
+     archived. Do **not** require the answer to beat current best.
+   - Update `best` only when the new byte count is strictly smaller; otherwise
+     archive the entry and leave `best` unchanged.
+   - Use a transformed merge commit instead of plain `gh pr merge --squash`: the
+     commit parents are current `solutions` and the PR head, but the tree stores
+     the archive layout so `answer.<ext>` never lands on `solutions`.
+   - `leaderboard.py` and `reverify-all.yml` read `index.json`/`best`, not
+     `answer.<ext>` files. Recent entries come from metadata, not git log.
+   - Migration uses `scripts/migrate_answers.py` to convert existing
+     `answer.<ext>` files into archive entries with
+     `source.kind = "legacy-single-answer-migration"`.
+   - Before mass submissions resume: push both branch updates, run `Reverify all`,
+     and pass the fork-PR harness against the new archive behavior.
 3. **Leaderboard** — see `main/scripts/leaderboard.py` and `.github/workflows/leaderboard.yml`.
-   - Scans `solutions/answers/`, emits `LEADERBOARD.md` on `solutions` with:
-     - Per-hole table: lang × bytes (sorted)
-     - Per-lang table: hole × bytes (sorted)
-     - Recent submissions feed (last 30 commits to solutions touching `answers/`)
+   - Scans `solutions/answers/*/*/index.json` and `best`, emits `LEADERBOARD.md`
+     on `solutions` with:
+     - Best-by-hole table: lang × bytes × entry id
+     - Best-by-lang table: hole × bytes × entry id
+     - Recent accepted entries from metadata `merged_at`
    - Scheduled daily; manually re-runnable via `workflow_dispatch`.
 4. **Periodic full re-run** — see `.github/workflows/reverify-all.yml`.
-   - Runs weekly on `main`. Re-verifies every `answers/<hole>/<lang>/answer.<ext>`
-     against current upstream `config/hole-answers/<hole>.txt` using the same
-     `verify/run.sh`.
+   - Runs weekly on `main`. Re-verifies every archived entry listed in
+     `answers/<hole>/<lang>/index.json` using the same `verify/run.sh`.
    - Catches: upstream changing expected output, lang image regressions, our
      verifier breaking against an existing entry.
    - On regression: posts an issue with the failing entries; does **not**
