@@ -1,0 +1,19 @@
+{
+  "best": "a1af52e7a1f6cade",
+  "entries": [
+    {
+      "bytes": 59,
+      "chars": 59,
+      "id": "a1af52e7a1f6cade",
+      "merged_at": "2026-05-01T08:23:13Z",
+      "meta": "answers/fizz-buzz/coconut/a1af52e7a1f6cade.meta.json",
+      "path": "answers/fizz-buzz/coconut/a1af52e7a1f6cade.coco",
+      "pr": 12,
+      "sha256": "a1af52e7a1f6cade5f4c5a27d4b95ca247b953502350881a7a83365cb0e2d757",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "coconut",
+  "schema": "codex-golf.index.v1"
+}

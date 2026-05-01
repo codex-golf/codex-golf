@@ -1,0 +1,38 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 59,
+  "chars": 59,
+  "ext": "coco",
+  "hole": "fizz-buzz",
+  "id": "a1af52e7a1f6cade",
+  "lang": "coconut",
+  "merged_at": "2026-05-01T08:23:13Z",
+  "path": "answers/fizz-buzz/coconut/a1af52e7a1f6cade.coco",
+  "pr": {
+    "author": "heshenclaw",
+    "base_sha": "05ca2595d757f3f76c3746b489bf772512db8a44",
+    "head_repo": "heshenclaw/codex-golf-e2e",
+    "head_sha": "53dc740b519af9673201ec8657a97778ecfa2060",
+    "number": 12,
+    "url": "https://github.com/codex-golf/codex-golf/pull/12"
+  },
+  "schema": "codex-golf.answer.v1",
+  "sha256": "a1af52e7a1f6cade5f4c5a27d4b95ca247b953502350881a7a83365cb0e2d757",
+  "source": {
+    "kind": "pull_request"
+  },
+  "submitted_at": null,
+  "verification": {
+    "upstream_ref": "master",
+    "verifier_ref": "main",
+    "workflow_run_id": "25207920575",
+    "workflow_run_url": "https://github.com/codex-golf/codex-golf/actions/runs/25207920575"
+  }
+}

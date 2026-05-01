@@ -162,6 +162,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "cobol"
     },
     {
+      "best": "a1af52e7a1f6cade",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/coconut/index.json",
+      "lang": "coconut"
+    },
+    {
       "best": "1e6e804b4429411c",
       "count": 1,
       "hole": "fizz-buzz",
