@@ -1,0 +1,20 @@
+{
+  "best": "133490be40229f2c",
+  "entries": [
+    {
+      "bytes": 30,
+      "chars": 30,
+      "id": "133490be40229f2c",
+      "issue": 129,
+      "merged_at": "2026-05-01T09:25:57Z",
+      "meta": "answers/fizz-buzz/stax/133490be40229f2c.meta.json",
+      "path": "answers/fizz-buzz/stax/133490be40229f2c.stax",
+      "pr": null,
+      "sha256": "133490be40229f2cfdd9464c69db16a6018934d965ea4fa0f7becbbc2467da38",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "stax",
+  "schema": "codex-golf.index.v1"
+}

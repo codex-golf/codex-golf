@@ -1,0 +1,33 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 30,
+  "chars": 30,
+  "ext": "stax",
+  "hole": "fizz-buzz",
+  "id": "133490be40229f2c",
+  "issue": {
+    "author": "heshenclaw",
+    "number": 129,
+    "url": "https://github.com/codex-golf/codex-golf/issues/129"
+  },
+  "lang": "stax",
+  "merged_at": "2026-05-01T09:25:57Z",
+  "path": "answers/fizz-buzz/stax/133490be40229f2c.stax",
+  "schema": "codex-golf.answer.v1",
+  "sha256": "133490be40229f2cfdd9464c69db16a6018934d965ea4fa0f7becbbc2467da38",
+  "source": {
+    "kind": "issue"
+  },
+  "submitted_at": null,
+  "verification": {
+    "verifier_ref": "main",
+    "workflow_run_id": "25209546920"
+  }
+}

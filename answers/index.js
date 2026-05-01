@@ -589,6 +589,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "squirrel"
     },
     {
+      "best": "133490be40229f2c",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/stax/index.json",
+      "lang": "stax"
+    },
+    {
       "best": "5a960c75be721db4",
       "count": 1,
       "hole": "happy-numbers",
