@@ -1,0 +1,20 @@
+{
+  "best": "e54fde088ee74c63",
+  "entries": [
+    {
+      "bytes": 110,
+      "chars": 110,
+      "id": "e54fde088ee74c63",
+      "issue": 74,
+      "merged_at": "2026-05-01T09:22:35Z",
+      "meta": "answers/fizz-buzz/elixir/e54fde088ee74c63.meta.json",
+      "path": "answers/fizz-buzz/elixir/e54fde088ee74c63.exs",
+      "pr": null,
+      "sha256": "e54fde088ee74c633b225a1dbd9a0a9c20aa4d889981ea781c8f7556970f7811",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "elixir",
+  "schema": "codex-golf.index.v1"
+}

@@ -225,6 +225,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "egel"
     },
     {
+      "best": "e54fde088ee74c63",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/elixir/index.json",
+      "lang": "elixir"
+    },
+    {
       "best": "9ffd8b8f4c1062fa",
       "count": 1,
       "hole": "fizz-buzz",
