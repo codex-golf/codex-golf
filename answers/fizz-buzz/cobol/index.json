@@ -1,0 +1,19 @@
+{
+  "best": "3f089656e9bb4c89",
+  "entries": [
+    {
+      "bytes": 398,
+      "chars": 398,
+      "id": "3f089656e9bb4c89",
+      "merged_at": "2026-05-01T08:21:47Z",
+      "meta": "answers/fizz-buzz/cobol/3f089656e9bb4c89.meta.json",
+      "path": "answers/fizz-buzz/cobol/3f089656e9bb4c89.cob",
+      "pr": 11,
+      "sha256": "3f089656e9bb4c89180d00f4b0c6812210f80435eb0be06c1fa762dc9213424c",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "cobol",
+  "schema": "codex-golf.index.v1"
+}

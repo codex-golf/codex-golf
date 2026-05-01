@@ -155,6 +155,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "clojure"
     },
     {
+      "best": "3f089656e9bb4c89",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/cobol/index.json",
+      "lang": "cobol"
+    },
+    {
       "best": "1e6e804b4429411c",
       "count": 1,
       "hole": "fizz-buzz",
