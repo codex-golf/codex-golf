@@ -56,8 +56,16 @@ CASES: dict[str, dict[str, Any]] = {
     "pass-basic": {
         "hole": "fizz-buzz",
         "lang": "basic",
-        "source_ext": "basic",
+        "source_ext": "bas",
         "dest_ext": "bas",
+        "expect": "pass",
+        "title_prefix": "e2e-pass",
+    },
+    "pass-python-divisors": {
+        "hole": "divisors",
+        "lang": "python",
+        "source_ext": "py",
+        "dest_ext": "py",
         "expect": "pass",
         "title_prefix": "e2e-pass",
     },
