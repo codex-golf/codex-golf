@@ -239,6 +239,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "f-sharp"
     },
     {
+      "best": "278d856fbaa74755",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/fennel/index.json",
+      "lang": "fennel"
+    },
+    {
       "best": "9ffd8b8f4c1062fa",
       "count": 1,
       "hole": "fizz-buzz",
