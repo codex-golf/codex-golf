@@ -148,6 +148,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "cjam"
     },
     {
+      "best": "c7e52936ccf399fe",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/clojure/index.json",
+      "lang": "clojure"
+    },
+    {
       "best": "1e6e804b4429411c",
       "count": 1,
       "hole": "fizz-buzz",

@@ -1,0 +1,19 @@
+{
+  "best": "c7e52936ccf399fe",
+  "entries": [
+    {
+      "bytes": 115,
+      "chars": 115,
+      "id": "c7e52936ccf399fe",
+      "merged_at": "2026-05-01T08:20:21Z",
+      "meta": "answers/fizz-buzz/clojure/c7e52936ccf399fe.meta.json",
+      "path": "answers/fizz-buzz/clojure/c7e52936ccf399fe.clj",
+      "pr": 10,
+      "sha256": "c7e52936ccf399fe66d7d891e0abc304dedaa9efc26ff21a6a2e0f9a0e55be10",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "clojure",
+  "schema": "codex-golf.index.v1"
+}
