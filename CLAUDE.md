@@ -9,17 +9,17 @@ Fork of `code-golf/code-golf`. Three branches with strict separation of concerns
 - **`main`** *(default)* — **our automation overlay**, based on a shared empty root commit:
   - `README.md`        — public-facing repo note
   - `CLAUDE.md`        — this file
-  - `VERIFY_LOCK` — pinned upstream code and Docker language image digests
+  - `verify/VERIFY_LOCK` — pinned upstream code and Docker language image digests
   - `verify/run.sh` and `verify/upstream-play.go` — thin verifier wrapper (called from solutions' workflow)
   - `.github/workflows/{merge-on-verify,reverify-all,sync-upstream-lock}.yml`
   - `scripts/` — runtime/maintenance scripts used by workflows
   - `tests/functional/` — manual/e2e functional test harnesses
 
-  `main` does **not** carry `answers/` and does **not** carry the `pull_request` workflow trigger. When upstream code is needed, workflows read `VERIFY_LOCK` from `main`, checkout the pinned upstream-mirror commit, and pass that checkout to `verify/run.sh`. Do not use floating `master` for verification.
+  `main` does **not** carry `answers/` and does **not** carry the `pull_request` workflow trigger. When upstream code is needed, workflows read `verify/VERIFY_LOCK` from `main`, checkout the pinned upstream-mirror commit, and pass that checkout to `verify/run.sh`. Do not use floating `master` for verification.
 
 - **`solutions`** — **archived answers + verify trigger**, also based on the shared empty root commit:
   - `answers/<hole>/<lang>/<id>.<ext>` plus `<id>.meta.json`, `best`, and `index.json`
-  - `.github/workflows/verify-pr.yml`        — thin trigger; checks out `main` for scripts and the upstream code pinned in `main/VERIFY_LOCK`
+  - `.github/workflows/verify-pr.yml`        — thin trigger; checks out `main` for scripts and the upstream code pinned in `main/verify/VERIFY_LOCK`
 
   PRs target this branch and still submit a staging `answers/<hole>/<lang>/answer.<ext>` file. Trusted merge converts that staging path into the archive layout. `solutions` should not carry verifier implementation files.
 
@@ -32,7 +32,7 @@ Fork of `code-golf/code-golf`. Three branches with strict separation of concerns
 4. **Disable upstream workflows via Settings**, not by editing their `.yml`.
 5. **`master` carries no overlay.** Not even README/CLAUDE.
 6. **`main` carries no `answers/` and no `pull_request` workflow.** It is not merged into `solutions`; `solutions` checks out `main` explicitly for scripts.
-7. **`solutions` carries the workflow trigger and `answers/`** but its workflow body is just a thin shell that checks out `main`, reads `main/VERIFY_LOCK`, checks out the pinned upstream source commit, and calls `main/verify/run.sh`. No verifier logic on `solutions`.
+7. **`solutions` carries the workflow trigger and `answers/`** but its workflow body is just a thin shell that checks out `main`, reads `main/verify/VERIFY_LOCK`, checks out the pinned upstream source commit, and calls `main/verify/run.sh`. No verifier logic on `solutions`.
 8. PRs are opened against `solutions`.
 
 ## Re-syncing with upstream
@@ -48,21 +48,21 @@ git fetch upstream
 git checkout master && git merge --ff-only upstream/master
 git push origin master
 
-# Verification is pinned by main/VERIFY_LOCK. Advancing master alone must not
+# Verification is pinned by main/verify/VERIFY_LOCK. Advancing master alone must not
 # change verifier behavior. To intentionally adopt new upstream judging code or
-# language images, update VERIFY_LOCK on main, push main, then run Reverify all
+# language images, update verify/VERIFY_LOCK on main, push main, then run Reverify all
 # and the fork-PR harness before mass submissions.
 
 # main/solutions are edited as overlays from the shared empty root commit.
 # Do not merge latest master into them; workflows checkout the pinned
-# VERIFY_LOCK commit whenever current upstream source is needed.
+# verify/VERIFY_LOCK commit whenever current upstream source is needed.
 ```
 
 Open PRs against `solutions` should be based on the current `solutions` tip.
 
 A manual workflow, **Sync upstream and rebuild lock**, performs the safe version
 of this process: it syncs `master` to either a provided upstream commit/ref or
-latest `code-golf/code-golf:master`, then rebuilds `VERIFY_LOCK` for the current
+latest `code-golf/code-golf:master`, then rebuilds `verify/VERIFY_LOCK` for the current
 archived languages in `solutions`. If a specific upstream commit is supplied,
 `master` is set to that upstream commit with `--force-with-lease` because
 `master` is only a mirror. It intentionally does not pre-lock every upstream
@@ -245,13 +245,13 @@ come from `master`:
 - `master:config/data/langs.toml` is the source of truth for args/env and is
   consumed by upstream `hole.Play` / `run-lang`.
 - `master:docker/live.Dockerfile` at the pinned upstream commit is the source of
-  truth for which official language images exist. `VERIFY_LOCK` pins the
+  truth for which official language images exist. `verify/VERIFY_LOCK` pins the
   immutable Docker digest for each accepted language; `verify/run.sh` pulls
   `codegolf/lang-<lang>@sha256:<digest>`, never floating `latest`.
 
 If upstream adds a language and its official image is present in
 `docker/live.Dockerfile`, the verifier should work after intentionally advancing
-`VERIFY_LOCK` and adding the corresponding image digest there.
+`verify/VERIFY_LOCK` and adding the corresponding image digest there.
 PR filenames still use the staging convention
 `answers/<hole>/<lang>/answer.<ext>`; extension choice is repository convention,
 not verifier logic.
@@ -301,9 +301,9 @@ not verifier logic.
    - `workflow_dispatch` input `upstream_ref` is optional. Empty means latest
      upstream `master`; a supplied value may be a specific upstream commit/ref.
    - The workflow syncs `master` first (`--force-with-lease` when setting it to
-     an explicit upstream commit), then rebuilds compact `VERIFY_LOCK` from
+     an explicit upstream commit), then rebuilds compact `verify/VERIFY_LOCK` from
      current `solutions` archive languages and Docker Hub image digests.
-   - After it changes `VERIFY_LOCK`, run `Reverify all` and the fork harness
+   - After it changes `verify/VERIFY_LOCK`, run `Reverify all` and the fork harness
      before mass submissions resume.
 6. ~~**Slim overlay branches**~~ — done.
    - `main` and `solutions` are based on a shared empty root commit instead of latest `master`.

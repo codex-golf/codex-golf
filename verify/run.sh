@@ -10,7 +10,7 @@ set -euo pipefail
 HOLE="$1"; LANG="$2"; SOL="$3"; UPSTREAM="${4:-.}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 UPSTREAM_ROOT="$(cd "$UPSTREAM" && pwd)"
-LOCK="$ROOT/VERIFY_LOCK"
+LOCK="$ROOT/verify/VERIFY_LOCK"
 
 [ -f "$SOL" ] || { echo "::error::no solution file: $SOL"; exit 1; }
 [ -f "$LOCK" ] || { echo "::error::missing verifier lock: $LOCK"; exit 1; }

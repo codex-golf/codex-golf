@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 UPSTREAM_URL = "https://github.com/code-golf/code-golf.git"
-LOCK_PATH = ROOT / "VERIFY_LOCK"
+LOCK_PATH = ROOT / "verify" / "VERIFY_LOCK"
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 LANG_RE = re.compile(r"^[a-z0-9-]+$")
@@ -152,7 +152,7 @@ def commit_lock(lock_text: str, dry_run: bool) -> None:
         return
 
     LOCK_PATH.write_text(lock_text)
-    run("git", "add", "VERIFY_LOCK")
+    run("git", "add", "verify/VERIFY_LOCK")
     run("git", "diff", "--cached", "--check")
     run("git", "commit", "-m", "verify: rebuild verifier lock")
     run("git", "push", "origin", "HEAD:main")
