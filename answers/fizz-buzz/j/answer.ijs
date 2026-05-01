@@ -1,0 +1,1 @@
+3 :'for_i. >:i.100 do. s=.((0=3|i)#''Fizz''),(0=5|i)#''Buzz'' if. 0=#s do. smoutput i else. smoutput s end. end.' ''
