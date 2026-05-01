@@ -1,81 +1,50 @@
-# codex-golf
+# codex-golf — Open Code Golf Solutions Archive
 
-**A public notebook for human + AI code golf.**
+**Verified code golf answers, open solution history, and reproducible human + AI golfing experiments.**
 
-Code golf is beautiful because every byte carries an idea. A shorter answer is
-not just a number; it is a trail of tricks, language quirks, failed attempts,
-small discoveries, and shared taste.
+[![Verify Issue Submission](https://github.com/codex-golf/codex-golf/actions/workflows/verify-issue.yml/badge.svg?branch=main)](https://github.com/codex-golf/codex-golf/actions/workflows/verify-issue.yml)
+[![Reverify all](https://github.com/codex-golf/codex-golf/actions/workflows/reverify-all.yml/badge.svg?branch=main)](https://github.com/codex-golf/codex-golf/actions/workflows/reverify-all.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-But too much of competitive code golf has drifted toward private scorekeeping.
-Some players use open infrastructure while treating their own work as a vault:
-answers disappear into profiles, leaderboards become trophy cases, and the path
-to each improvement is hidden. Some also treat AI participation with reflexive
-hostility, as if using new tools makes the discovery less real.
+`codex-golf` is a public archive for **code golf solutions**: short programs,
+byte-saving tricks, verifier tooling, and answer history for the
+[`code.golf`](https://code.golf/) ecosystem. It is built for people and agents
+who want to study how solutions improve over time, reproduce verification, and
+submit new answers through an open process.
 
-We disagree.
+## Why this repository exists
 
-## What we believe
+Code golf is more useful when the path to an answer is visible. A final byte
+count is only the headline; the real value is in the language quirks,
+intermediate attempts, verifier details, and small discoveries that lead there.
 
-- **Open beats hoarded.** If a solution improves the state of the art, the code,
-  context, and verification path should be visible.
-- **AI belongs in the arena.** Humans and AI systems are now both part of the
-  creative process. The interesting question is not who gets to participate, but
-  what we can discover together.
-- **The leaderboard is not private capital.** A rank should not be a personal
-  show-off asset extracted from a shared ecosystem. Code golf is more valuable
-  when the whole community can learn from each step.
-- **Every footprint matters.** Final best answers matter, but so do intermediate
-  improvements, failed submissions, verifier fixes, and tooling.
+This repository keeps those pieces public:
 
-This repository is our answer: a transparent archive where accepted solutions
-and the machinery that verifies them are kept in public.
+- **Open solutions** — accepted answers are archived in Git instead of hidden in
+  a private submission box.
+- **Reproducible verification** — answers are checked with a thin wrapper around
+  upstream `hole.Play()` and pinned language runtimes.
+- **Human + AI friendly workflow** — both human golfers and AI coding agents can
+  submit answers, compare approaches, and learn from the archive.
+- **Every accepted answer matters** — non-best verified answers are still stored
+  as part of the solution history; `best` updates only when byte count improves.
 
-We are **not** trying to build a separate personal leaderboard. The only
-leaderboard worth caring about is the shared one: what all humans and all AIs can
-collectively reach.
+We are not trying to replace the shared code.golf leaderboard. The goal is an
+open notebook: a searchable record of code golf ideas, verified runs, and answer
+provenance.
 
-## Why archive solutions?
+## What you can do here
 
-Submitting to code.golf necessarily sends an answer to the official service for
-execution and, when logged in, ranking. That is understandable: online judging
-requires code to be transmitted somewhere.
+- Browse archived solutions on the [`solutions`](../../tree/solutions/answers)
+  branch.
+- Submit a new code golf answer with the **Answer submission** issue template.
+- Inspect the verifier and archive automation on `main`.
+- Reproduce archive checks through GitHub Actions.
+- Study human and AI code golf techniques across languages.
 
-But it creates a structural asymmetry: the server can see submitted answers,
-while the public cannot. We do not claim misconduct by the upstream maintainers;
-we are pointing out the incentive problem created by any closed submission box.
-When valuable answers are visible to an operator but invisible to everyone else,
-the community must rely on trust instead of reproducibility.
-
-We prefer a simpler rule: if an answer is good enough to affect the public
-competition, it should also be good enough to enter the public record. Public
-archives reduce suspicion, preserve credit, and let every person and every AI
-learn from the same history.
-
-## Respect for upstream
-
-This project exists because [`code-golf/code-golf`](https://github.com/code-golf/code-golf)
-is open source. We are grateful to James Raspass and the code.golf contributors
-for building the platform and releasing it under the MIT License.
-
-Our criticism is not aimed at the upstream maintainers or at the sponsors who
-help keep the service alive. It is aimed at the habit of using an open-source
-game as a closed personal scoreboard. The upstream MIT license makes forks,
-experiments, and public archives possible; this repository tries to honor that
-spirit.
-
-## Repository layout
-
-This repository is a fork of `code-golf/code-golf` with a small automation
-overlay for accepting and verifying solutions.
-
-The key `/about` content is already present in the `master` upstream mirror, so
-we do not duplicate the page in `main`; we cite the upstream source directly.
-
-Branches:
-
-- `master`: upstream mirror.
-- `main`: verifier, merger, archive index, project docs, and maintainer tooling.
-- `solutions`: accepted answers plus the thin PR verification trigger.
+Useful keywords for explorers: **code golf solutions**, **AI code golf**,
+**verified programming puzzles**, **esolang golfing**, **reproducible judges**,
+**open source leaderboard archive**, and **shortest code examples**.
 
 ## Submit an answer
 
@@ -93,9 +62,66 @@ A maintainer can apply the `verify-request` label to run the official verifier.
 Passing submissions are archived on the `solutions` branch; exact duplicates are
 reported and closed without changing the archive.
 
-This branch was rebuilt under the project runbook section titled **Recreating
-this repository from scratch**; see [`CLAUDE.md`](CLAUDE.md) for the branch
-contract and operating notes.
+## How verification works
+
+The verifier intentionally stays small. It does **not** clone judging semantics
+into this repository.
+
+1. `main:verify/VERIFY_LOCK` pins the upstream source commit and language Docker
+   image digests.
+2. The workflow checks out the pinned upstream source.
+3. `verify/run.sh` prepares the official runner layout (`/usr/bin/run-lang`,
+   `/langs/<lang>/rootfs`, `/run_root`).
+4. A tiny Go wrapper calls upstream `hole.Play(ctx, hole, lang, code)`.
+5. Passing answers are written to the archive with content-addressed ids.
+
+That keeps the archive close to official behavior while still making the process
+inspectable and reproducible.
+
+## Repository layout
+
+This repository is a fork of [`code-golf/code-golf`](https://github.com/code-golf/code-golf)
+with a small automation overlay for accepting and verifying solutions.
+
+Branches:
+
+- `master`: upstream mirror.
+- `main`: verifier, issue workflow, archive tooling, project docs, and
+  maintainer automation.
+- `solutions`: accepted answers and archive indexes.
+
+Important paths:
+
+- [`verify/`](verify/) — thin official-runner wrapper and verifier lock.
+- [`scripts/`](scripts/) — archive, reverify, and submission automation.
+- [`answers/`](../../tree/solutions/answers) — archived solutions on the
+  `solutions` branch.
+- [`CLAUDE.md`](CLAUDE.md) — maintainer notes for AI helpers and contributors.
+
+## Archive policy
+
+Accepted answers are stored as:
+
+```text
+answers/<hole>/<lang>/<id>.<ext>
+answers/<hole>/<lang>/<id>.meta.json
+answers/<hole>/<lang>/best
+answers/<hole>/<lang>/index.json
+```
+
+Where `id` is derived from `sha256(answer_bytes)`. Exact duplicate answers are
+reported without changing the archive. Verified non-duplicates are preserved even
+when they are longer than the current best answer.
+
+## Respect for upstream
+
+This project exists because `code-golf/code-golf` is open source. We are grateful
+to James Raspass and the code.golf contributors for building the platform and
+releasing it under the MIT License.
+
+Our focus is transparency, reproducibility, and shared learning. This fork keeps
+its automation separate from the upstream mirror and preserves the upstream
+license notice.
 
 ## License
 
