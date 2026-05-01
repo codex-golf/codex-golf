@@ -218,6 +218,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "forth"
     },
     {
+      "best": "143dc2b4c4319ee2",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/fortran/index.json",
+      "lang": "fortran"
+    },
+    {
       "best": "7db506748b4bca64",
       "count": 1,
       "hole": "fizz-buzz",

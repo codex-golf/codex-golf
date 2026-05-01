@@ -1,0 +1,19 @@
+{
+  "best": "143dc2b4c4319ee2",
+  "entries": [
+    {
+      "bytes": 182,
+      "chars": 182,
+      "id": "143dc2b4c4319ee2",
+      "merged_at": "2026-05-01T08:37:50Z",
+      "meta": "answers/fizz-buzz/fortran/143dc2b4c4319ee2.meta.json",
+      "path": "answers/fizz-buzz/fortran/143dc2b4c4319ee2.f90",
+      "pr": 25,
+      "sha256": "143dc2b4c4319ee2c7cd8ee1d3c8758aa61df0823018941eea3bcdc8fb36bec8",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "fortran",
+  "schema": "codex-golf.index.v1"
+}
