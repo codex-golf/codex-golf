@@ -197,6 +197,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "crystal"
     },
     {
+      "best": "a1f26858d7f1391c",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/d/index.json",
+      "lang": "d"
+    },
+    {
       "best": "9ffd8b8f4c1062fa",
       "count": 1,
       "hole": "fizz-buzz",
