@@ -47,6 +47,7 @@ CASES: dict[str, dict[str, Any]] = {
         "hole": "fizz-buzz",
         "lang": "05ab1e",
         "source_ext": "05ab1e",
+        "dest_ext": "5ab1e",
         "expect": "fail",
         "title_prefix": "e2e-fail",
     },
@@ -56,6 +57,7 @@ CASES: dict[str, dict[str, Any]] = {
         "hole": "fizz-buzz",
         "lang": "basic",
         "source_ext": "basic",
+        "dest_ext": "bas",
         "expect": "pass",
         "title_prefix": "e2e-pass",
     },
@@ -120,14 +122,6 @@ def ensure_fork(base: str, fork_owner: str, fork_name: str) -> str:
     raise RuntimeError(f"fork did not appear: {fork}")
 
 
-def lang_ext(repo_root: Path, lang: str) -> str:
-    data = json.loads((repo_root / "verify" / "langs.json").read_text())
-    ext = data.get(lang, {}).get("ext")
-    if not ext:
-        raise RuntimeError(f"unknown lang in verify/langs.json: {lang}")
-    return ext
-
-
 def source_file(corpus: Path, hole: str, lang: str, source_ext: str) -> Path:
     src = corpus / hole / f"{lang}.{source_ext}"
     if not src.exists():
@@ -190,7 +184,6 @@ def main() -> int:
     parser.add_argument("--allow-merge", action="store_true", help="Required for pass cases because they mutate solutions")
     args = parser.parse_args()
 
-    repo_root = Path(__file__).resolve().parents[1]
     if args.corpus is None:
         raise RuntimeError("missing --corpus (or CODEX_GOLF_CORPUS)")
     case = CASES[args.case]
@@ -204,7 +197,7 @@ def main() -> int:
 
     hole = case["hole"]
     lang = case["lang"]
-    dest_ext = lang_ext(repo_root, lang)
+    dest_ext = case.get("dest_ext", case["source_ext"])
     src = source_file(args.corpus, hole, lang, case["source_ext"])
     size = src.stat().st_size
     branch = make_branch_name(args.case)

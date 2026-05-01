@@ -10,20 +10,20 @@ set -euo pipefail
 HOLE="$1"; LANG="$2"; SOL="$3"; UPSTREAM="${4:-.}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 UPSTREAM_ROOT="$(cd "$UPSTREAM" && pwd)"
-LANGS_JSON="$ROOT/verify/langs.json"
 
 [ -f "$SOL" ] || { echo "::error::no solution file: $SOL"; exit 1; }
-
-EXT="$(jq -r --arg l "$LANG" '.[$l].ext // empty' "$LANGS_JSON")"
-IMAGE="$(jq -r --arg l "$LANG" '.[$l].image // empty' "$LANGS_JSON")"
-[ -n "$EXT" ]   || { echo "::error::unsupported lang: $LANG (see verify/langs.json)"; exit 1; }
-[ -n "$IMAGE" ] || { echo "::error::no image configured for lang: $LANG"; exit 1; }
-
-BASENAME="$(basename "$SOL")"
-case "$BASENAME" in
-  *."$EXT") ;;
-  *) echo "::error::filename extension must be .$EXT for lang=$LANG (got $BASENAME)"; exit 1 ;;
+case "$LANG" in
+  *[!a-z0-9-]*|'') echo "::error::invalid language id: $LANG"; exit 1 ;;
 esac
+
+# Do not maintain a parallel language registry in this overlay. Upstream's
+# docker/live.Dockerfile is the source of truth for official language images;
+# upstream config/data/langs.toml still drives hole.Play()/run-lang execution.
+if ! grep -Eq "^[[:space:]]*COPY --from=codegolf/lang-${LANG}[[:space:]]" "$UPSTREAM_ROOT/docker/live.Dockerfile"; then
+  echo "::error::unsupported lang or missing official image in master: $LANG"
+  exit 1
+fi
+IMAGE="codegolf/lang-${LANG}:latest"
 
 WORKDIR="$(mktemp -d)"
 trap 'rm -rf "$WORKDIR"' EXIT

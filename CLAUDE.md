@@ -9,8 +9,7 @@ Fork of `code-golf/code-golf`. Three branches with strict separation of concerns
 - **`main`** *(default)* — **our automation overlay**, based on a shared empty root commit:
   - `README.md`        — public-facing repo note
   - `CLAUDE.md`        — this file
-  - `verify/run.sh`    — verifier runner (called from solutions' workflow)
-  - `verify/langs.json` and `verify/upstream-play.go`
+  - `verify/run.sh` and `verify/upstream-play.go` — thin verifier wrapper (called from solutions' workflow)
   - `.github/workflows/{merge-on-verify,leaderboard,reverify-all}.yml`
   - `scripts/`
 
@@ -225,26 +224,20 @@ All must hold:
 
 ## Adding a language
 
-Edit `verify/langs.json` on `main`:
-```json
-"<lang>": { "ext": "<ext>", "image": "codegolf/lang-<lang>:latest" }
-```
+Do **not** add a local language registry to this overlay. Language support should
+come from `master`:
 
-Upstream maintains pre-built docker images at `codegolf/lang-<lang>` on Docker
-Hub. The verifier exports the selected image as the official `/langs/<lang>/rootfs`
-and lets upstream `hole.Play` / `run-lang` decide how to execute it.
+- `master:config/data/langs.toml` is the source of truth for args/env and is
+  consumed by upstream `hole.Play` / `run-lang`.
+- `master:docker/live.Dockerfile` is the source of truth for official language
+  images. `verify/run.sh` accepts a language only when that file contains
+  `COPY --from=codegolf/lang-<lang> ...`, then pulls `codegolf/lang-<lang>:latest`.
 
-Languages without an official docker image (currently:
-`arkscript / knight / lily / luau / qore / stax / umka / vala`) are skipped
-— we'd have to either build & push our own image or skip the lang.
-
-Extension convention:
-- Industry-standard where unambiguous: `.py / .rs / .js / .rb / .java / ...`
-- Lang name as fallback for esolangs: `.bqn / .uiua / .5ab1e`
-- Explicit overrides to avoid collisions: `forth=.fth` (vs f-sharp's `.fs`),
-  `prolog=.prolog` (vs perl's `.pl`)
-
-Then merge `main` → `solutions`. The new lang is live for the next PR.
+If upstream adds a language and its official image is present in
+`docker/live.Dockerfile`, the verifier should work without editing `main`. PR
+filenames still use the staging convention
+`answers/<hole>/<lang>/answer.<ext>`; extension choice is repository convention,
+not verifier logic.
 
 ## TODO / Roadmap
 
