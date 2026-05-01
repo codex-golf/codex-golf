@@ -23,6 +23,7 @@
     - `merge-on-verify.yml`
     - `reverify-all.yml`
     - `sync-upstream-lock.yml`
+    - `verify-issue.yml`
   - Does **not** contain `answers/`.
   - Does **not** contain the `pull_request` verify trigger.
 
@@ -133,6 +134,7 @@ Where:
 
 Current important scripts:
 - `scripts/archive_merge.py`
+- `scripts/issue_submission.py`
 - `scripts/reverify_archive.py`
 - `scripts/rebuild_verify_lock.py`
 - `tests/functional/fork_pr_harness.py`
@@ -208,8 +210,34 @@ Public identity:
 - do not claim sponsor Solution Notes are shared/paywalled knowledge; source shows they are per-user notes
 - keep wording principled; do not name or attack individual players
 
+## Issue submission queue
+
+Preferred public submission path is an Issue labeled by an authorized maintainer.
+
+Issue body format:
+
+````text
+<!-- codex-golf-submission-v1 -->
+hole: fizz-buzz
+lang: python
+ext: py
+sha256: <64 hex>
+
+```answer-base64
+<base64 of exact answer bytes>
+```
+````
+
+Flow:
+- User opens issue with exact-byte answer encoded as base64.
+- Authorized maintainer applies `verify-request`.
+- `verify-issue.yml` parses the issue, verifies with `verify/run.sh`, and archives via `scripts/issue_submission.py`.
+- Archive writes use optimistic push retry against latest `origin/solutions`; concurrent accepted issues should all eventually land.
+- Successful or duplicate submissions are labeled/commented and closed.
+
 ## Current TODO
 
+- Add an issue-submission E2E harness.
 - Extend `tests/functional/fork_pr_harness.py` for:
   - duplicate exact-content
   - valid longer non-best archive

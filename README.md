@@ -77,6 +77,26 @@ Branches:
 - `main`: verifier, merger, archive index, project docs, and maintainer tooling.
 - `solutions`: accepted answers plus the thin PR verification trigger.
 
+## Submit an answer
+
+Open an issue with an exact-byte, base64-encoded answer:
+
+````text
+<!-- codex-golf-submission-v1 -->
+hole: fizz-buzz
+lang: python
+ext: py
+sha256: <64 hex>
+
+```answer-base64
+<base64 of exact answer bytes>
+```
+````
+
+A maintainer can apply the `verify-request` label to run the official verifier.
+Passing submissions are archived on the `solutions` branch; exact duplicates are
+reported and closed without changing the archive.
+
 This branch was rebuilt under the project runbook section titled **Recreating
 this repository from scratch**; see [`CLAUDE.md`](CLAUDE.md) for the branch
 contract and operating notes.

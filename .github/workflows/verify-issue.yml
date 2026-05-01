@@ -1,0 +1,172 @@
+name: Verify Issue Submission
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  actions: read
+
+jobs:
+  verify-issue:
+    if: github.event.label.name == 'verify-request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout main verifier
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+          fetch-depth: 1
+
+      - name: Prepare labels
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          gh label create verify-request --repo "$REPO" --color 0969DA --description "Authorized request to verify issue submission" || true
+          gh label create verify-running --repo "$REPO" --color 54AEFF --description "Issue submission verification is running" || true
+          gh label create verify-pass --repo "$REPO" --color 2EA44F --description "Verification passed" || true
+          gh label create verify-fail --repo "$REPO" --color D73A4A --description "Verification failed" || true
+          gh label create archive-duplicate --repo "$REPO" --color B08800 --description "Answer already archived" || true
+          gh label create needs-format --repo "$REPO" --color FBCA04 --description "Submission format is invalid" || true
+          gh issue edit "$ISSUE" --repo "$REPO" --add-label verify-running || true
+
+      - name: Parse issue submission
+        id: prep
+        run: |
+          set -euo pipefail
+          python3 main/scripts/issue_submission.py prepare "$GITHUB_EVENT_PATH" /tmp/codex-issue-answer
+
+      - name: Resolve upstream lock
+        id: upstream-lock
+        run: |
+          set -euo pipefail
+          REF="$(awk '$1 == "upstream_ref" { print $2 }' main/verify/VERIFY_LOCK)"
+          if ! printf '%s\n' "$REF" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "::error::invalid upstream_ref in verify/VERIFY_LOCK: $REF"
+            exit 1
+          fi
+          if ! awk -v lang="${{ steps.prep.outputs.lang }}" '$1 == "lang_image" && $2 == lang { found=1 } END { exit found ? 0 : 1 }' main/verify/VERIFY_LOCK; then
+            echo "::error::language not locked in verify/VERIFY_LOCK: ${{ steps.prep.outputs.lang }}"
+            exit 1
+          fi
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout upstream mirror
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.upstream-lock.outputs.ref }}
+          path: upstream
+          fetch-depth: 1
+
+      - name: Verify answer
+        id: verify
+        env:
+          HOLE: ${{ steps.prep.outputs.hole }}
+          LANG: ${{ steps.prep.outputs.lang }}
+          ANSWER: ${{ steps.prep.outputs.answer_path }}
+        run: |
+          set -euo pipefail
+          chmod +x main/verify/run.sh
+          if ! main/verify/run.sh "$HOLE" "$LANG" "$ANSWER" upstream > /tmp/verify.out 2> /tmp/verify.err; then
+            echo "=== verify stdout ==="
+            cat /tmp/verify.out
+            echo "=== verify stderr ==="
+            cat /tmp/verify.err
+            exit 1
+          fi
+          echo "=== verify stdout ==="
+          cat /tmp/verify.out
+          echo "=== verify stderr ==="
+          cat /tmp/verify.err
+          BYTES="$(awk '/^PASS /{print $2}' /tmp/verify.out)"
+          if [ -z "$BYTES" ]; then
+            echo "::error::verify/run.sh did not emit PASS <bytes>"
+            exit 1
+          fi
+          if [ "$BYTES" != "${{ steps.prep.outputs.bytes }}" ]; then
+            echo "::error::verified byte count mismatch: $BYTES != ${{ steps.prep.outputs.bytes }}"
+            exit 1
+          fi
+
+      - name: Checkout solutions
+        uses: actions/checkout@v4
+        with:
+          ref: solutions
+          path: solutions
+          fetch-depth: 1
+
+      - name: Archive answer with push retry
+        id: archive
+        working-directory: solutions
+        run: |
+          set -euo pipefail
+          python3 ../main/scripts/issue_submission.py archive "$GITHUB_EVENT_PATH" "${{ steps.prep.outputs.answer_path }}"
+
+      - name: Mark duplicate
+        if: steps.archive.outputs.result == 'duplicate'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
+          HOLE: ${{ steps.prep.outputs.hole }}
+          LANG: ${{ steps.prep.outputs.lang }}
+          ID: ${{ steps.archive.outputs.id }}
+        run: |
+          set -euo pipefail
+          gh issue edit "$ISSUE" --repo "$REPO" --remove-label verify-running || true
+          gh issue edit "$ISSUE" --repo "$REPO" --remove-label verify-request || true
+          gh issue edit "$ISSUE" --repo "$REPO" --add-label archive-duplicate || true
+          gh issue comment "$ISSUE" --repo "$REPO" --body "⚠️ **$HOLE / $LANG** already archived as \`$ID\`."
+          gh issue close "$ISSUE" --repo "$REPO" || true
+
+      - name: Mark success
+        if: steps.archive.outputs.result == 'archived'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
+          HOLE: ${{ steps.archive.outputs.hole }}
+          LANG: ${{ steps.archive.outputs.lang }}
+          BYTES: ${{ steps.archive.outputs.bytes }}
+          ID: ${{ steps.archive.outputs.id }}
+          BEST: ${{ steps.archive.outputs.best_result }}
+          PREV: ${{ steps.archive.outputs.previous_best_bytes }}
+          ARCHIVE_PATH: ${{ steps.archive.outputs.path }}
+        run: |
+          set -euo pipefail
+          gh issue edit "$ISSUE" --repo "$REPO" --remove-label verify-running || true
+          gh issue edit "$ISSUE" --repo "$REPO" --remove-label verify-request || true
+          gh issue edit "$ISSUE" --repo "$REPO" --add-label verify-pass || true
+          if [ "$BEST" = "new_best" ]; then
+            RESULT="new best (previous: ${PREV})"
+          else
+            RESULT="archived; best unchanged"
+          fi
+          gh issue comment "$ISSUE" --repo "$REPO" --body "✅ **$HOLE / $LANG** passed and archived as \`$ID\` (**${BYTES}B**): $RESULT.\n\nPath: \`$ARCHIVE_PATH\`."
+          gh issue close "$ISSUE" --repo "$REPO" || true
+
+      - name: Mark failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          gh issue edit "$ISSUE" --repo "$REPO" --remove-label verify-running || true
+          gh issue edit "$ISSUE" --repo "$REPO" --remove-label verify-request || true
+          if [ -z "${{ steps.prep.outputs.hole }}" ]; then
+            gh issue edit "$ISSUE" --repo "$REPO" --add-label needs-format || true
+          else
+            gh issue edit "$ISSUE" --repo "$REPO" --add-label verify-fail || true
+          fi
+          gh issue comment "$ISSUE" --repo "$REPO" --body "❌ Issue submission verification failed. See run log: $RUN_URL"
