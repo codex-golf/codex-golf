@@ -127,8 +127,8 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "brainfuck"
     },
     {
-      "best": "197e50460e82fffb",
-      "count": 1,
+      "best": "0934382e791a1227",
+      "count": 2,
       "hole": "fizz-buzz",
       "index": "answers/fizz-buzz/c/index.json",
       "lang": "c"

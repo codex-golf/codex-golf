@@ -1,5 +1,5 @@
 {
-  "best": "197e50460e82fffb",
+  "best": "0934382e791a1227",
   "entries": [
     {
       "bytes": 112,
@@ -10,6 +10,18 @@
       "path": "answers/fizz-buzz/c/197e50460e82fffb.c",
       "pr": null,
       "sha256": "197e50460e82fffb174cf0481a65904355c06d5e89d3f35751f9f8282e2a85b5",
+      "was_best": true
+    },
+    {
+      "bytes": 81,
+      "chars": 81,
+      "id": "0934382e791a1227",
+      "issue": 60,
+      "merged_at": "2026-05-01T09:21:51Z",
+      "meta": "answers/fizz-buzz/c/0934382e791a1227.meta.json",
+      "path": "answers/fizz-buzz/c/0934382e791a1227.c",
+      "pr": null,
+      "sha256": "0934382e791a12274f4b8b4efdbb4f85123fb8db6bad5d094aecbea90b79db14",
       "was_best": true
     }
   ],
