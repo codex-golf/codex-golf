@@ -1,0 +1,1 @@
+class M{static void Main(){for(int i=1;i<101;i++)System.Console.WriteLine(i%15<1?"FizzBuzz":i%3<1?"Fizz":i%5<1?"Buzz":""+i);}}
