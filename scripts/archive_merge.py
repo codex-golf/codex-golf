@@ -43,6 +43,34 @@ def git_show_bytes(ref, path):
     return subprocess.run(["git", "show", f"{ref}:{path}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True).stdout
 
 
+def write_archive_manifest(root=Path("answers")):
+    entries = []
+    if root.exists():
+        for index_path in sorted(root.glob("*/*/index.json")):
+            try:
+                index = json.load(open(index_path, encoding="utf-8"))
+            except json.JSONDecodeError:
+                continue
+            hole = index.get("hole") or index_path.parents[1].name
+            lang = index.get("lang") or index_path.parent.name
+            entries.append({
+                "hole": hole,
+                "lang": lang,
+                "index": str(index_path).replace("\\", "/"),
+                "best": index.get("best"),
+                "count": len(index.get("entries", [])),
+            })
+    payload = {
+        "schema": "codex-golf.archive-index.v1",
+        "entries": entries,
+    }
+    root.mkdir(parents=True, exist_ok=True)
+    with open(root / "index.js", "w", encoding="utf-8") as f:
+        f.write("globalThis.CODEX_GOLF_INDEX = ")
+        json.dump(payload, f, indent=2, sort_keys=True)
+        f.write(";\n")
+
+
 def existing_index(lang_dir):
     index_path = lang_dir / "index.json"
     if not index_path.exists():
@@ -206,10 +234,11 @@ def main():
     with open(lang_dir / "index.json", "w", encoding="utf-8") as f:
         json.dump(index, f, indent=2, sort_keys=True)
         f.write("\n")
+    write_archive_manifest()
 
     run(["git", "config", "user.name", "codex-golf bot"])
     run(["git", "config", "user.email", "actions@github.com"])
-    run(["git", "add", str(lang_dir)])
+    run(["git", "add", str(lang_dir), "answers/index.js"])
     staged = subprocess.run(["git", "diff", "--cached", "--quiet"])
     if staged.returncode == 0:
         print("::error::archive produced no changes", file=sys.stderr)

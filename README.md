@@ -25,7 +25,7 @@ We disagree.
   show-off asset extracted from a shared ecosystem. Code golf is more valuable
   when the whole community can learn from each step.
 - **Every footprint matters.** Final best answers matter, but so do intermediate
-  improvements, failed submissions, verifier fixes, migrations, and tooling.
+  improvements, failed submissions, verifier fixes, and tooling.
 
 This repository is our answer: a transparent archive where accepted solutions
 and the machinery that verifies them are kept in public.
@@ -74,7 +74,7 @@ we do not duplicate the page in `main`; we cite the upstream source directly.
 Branches:
 
 - `master`: upstream mirror.
-- `main`: verifier, merger, leaderboard, project docs, and maintainer tooling.
+- `main`: verifier, merger, archive index, project docs, and maintainer tooling.
 - `solutions`: accepted answers plus the thin PR verification trigger.
 
 This branch was rebuilt under the project runbook section titled **Recreating

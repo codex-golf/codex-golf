@@ -11,7 +11,7 @@ Fork of `code-golf/code-golf`. Three branches with strict separation of concerns
   - `CLAUDE.md`        — this file
   - `VERIFY_LOCK` — pinned upstream code and Docker language image digests
   - `verify/run.sh` and `verify/upstream-play.go` — thin verifier wrapper (called from solutions' workflow)
-  - `.github/workflows/{merge-on-verify,leaderboard,reverify-all}.yml`
+  - `.github/workflows/{merge-on-verify,reverify-all,sync-upstream-lock}.yml`
   - `scripts/`
 
   `main` does **not** carry `answers/` and does **not** carry the `pull_request` workflow trigger. When upstream code is needed, workflows read `VERIFY_LOCK` from `main`, checkout the pinned upstream-mirror commit, and pass that checkout to `verify/run.sh`. Do not use floating `master` for verification.
@@ -130,12 +130,12 @@ from `code-golf/code-golf`** relationship while keeping our branches slim.
 
    git checkout -B main "$EMPTY"
    # add only: README.md, LICENSE, CLAUDE.md, verify/, scripts/,
-   # .github/workflows/{merge-on-verify,leaderboard,reverify-all}.yml
+   # .github/workflows/{merge-on-verify,reverify-all,sync-upstream-lock}.yml
    git commit -m 'main branch: automation overlay on empty base'
    git push --force origin main:main
 
    git checkout -B solutions "$EMPTY"
-   # add only: answers/, LEADERBOARD.md, and .github/workflows/verify-pr.yml
+   # add only: answers/ and .github/workflows/verify-pr.yml
    git commit -m 'solutions branch: answers and verify trigger on empty base'
    git push --force origin solutions:solutions
    ```
@@ -178,8 +178,8 @@ from `code-golf/code-golf`** relationship while keeping our branches slim.
 
 6. **Register/verify workflows.**
    - After `main` is the default branch, GitHub should show only our active
-     workflows: `Leaderboard`, `Merge on Verify`, and `Reverify all`.
-   - Run `Reverify all` once and trigger `Leaderboard` once. Both should pass.
+     workflows: `Merge on Verify`, `Reverify all`, and `Sync upstream and rebuild lock`.
+   - Run `Reverify all` once. It should pass.
    - Final sanity checks:
      - repo is still a fork of `code-golf/code-golf`;
      - branch list is exactly `main`, `master`, `solutions`;
@@ -274,20 +274,20 @@ not verifier logic.
    - Use a transformed merge commit instead of plain `gh pr merge --squash`: the
      commit parents are current `solutions` and the PR head, but the tree stores
      the archive layout so `answer.<ext>` never lands on `solutions`.
-   - `leaderboard.py` and `reverify-all.yml` read `index.json`/`best`, not
-     `answer.<ext>` files. Recent entries come from metadata, not git log.
-   - Migration uses `scripts/migrate_answers.py` to convert existing
-     `answer.<ext>` files into archive entries with
-     `source.kind = "legacy-single-answer-migration"`.
+   - `reverify-all.yml` reads `index.json`/`best`, not `answer.<ext>` files.
+   - `answers/index.js` is a lightweight manifest for future GitHub Pages/client
+     rendering; it points to per-hole/per-language `index.json` files and is
+     refreshed by `archive_merge.py`.
+   - Migration code was one-shot and has been removed after the archive layout
+     was established.
    - Before mass submissions resume: push both branch updates, run `Reverify all`,
-     and pass the fork-PR harness against the new archive behavior.
-3. **Leaderboard** — see `main/scripts/leaderboard.py` and `.github/workflows/leaderboard.yml`.
-   - Scans `solutions/answers/*/*/index.json` and `best`, emits `LEADERBOARD.md`
-     on `solutions` with:
-     - Best-by-hole table: lang × bytes × entry id
-     - Best-by-lang table: hole × bytes × entry id
-     - Recent accepted entries from metadata `merged_at`
-   - Scheduled daily; manually re-runnable via `workflow_dispatch`.
+     and pass the fork-PR harness against the archive behavior.
+3. **Client archive index** — see `answers/index.js` on `solutions`.
+   - `answers/index.js` is the only generated presentation helper kept in git.
+     It is a compact manifest for future GitHub Pages/client rendering and does
+     not attempt to be a Markdown leaderboard.
+   - Per-language facts remain in `answers/<hole>/<lang>/index.json`, `best`,
+     and metadata sidecars.
 4. **Periodic full re-run** — see `.github/workflows/reverify-all.yml`.
    - Runs weekly on `main`. Re-verifies every archived entry listed in
      `answers/<hole>/<lang>/index.json` using the same `verify/run.sh`.
