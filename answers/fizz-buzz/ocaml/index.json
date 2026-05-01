@@ -1,0 +1,20 @@
+{
+  "best": "01ec4251a6fbb2d4",
+  "entries": [
+    {
+      "bytes": 141,
+      "chars": 141,
+      "id": "01ec4251a6fbb2d4",
+      "issue": 106,
+      "merged_at": "2026-05-01T09:24:26Z",
+      "meta": "answers/fizz-buzz/ocaml/01ec4251a6fbb2d4.meta.json",
+      "path": "answers/fizz-buzz/ocaml/01ec4251a6fbb2d4.ml",
+      "pr": null,
+      "sha256": "01ec4251a6fbb2d474bde28f609d28101ec5642dc342da0ea9471365ac9e4f72",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "ocaml",
+  "schema": "codex-golf.index.v1"
+}

@@ -1,0 +1,1 @@
+for i=1 to 100 do print_endline(if i mod 15=0 then"FizzBuzz"else if i mod 3=0 then"Fizz"else if i mod 5=0 then"Buzz"else string_of_int i)done
