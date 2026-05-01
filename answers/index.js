@@ -505,6 +505,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "qore"
     },
     {
+      "best": "ebb8f1aaf081a5fc",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/raku/index.json",
+      "lang": "raku"
+    },
+    {
       "best": "711c754499dd7018",
       "count": 1,
       "hole": "fizz-buzz",
