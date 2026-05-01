@@ -40,9 +40,9 @@ jobs:
         id: upstream-lock
         run: |
           set -euo pipefail
-          REF="$(tr -d '[:space:]' < main/UPSTREAM_REF)"
+          REF="$(awk '$1 == "upstream_ref" { print $2 }' main/VERIFY_LOCK)"
           if ! printf '%s\n' "$REF" | grep -Eq '^[0-9a-f]{40}$'; then
-            echo "::error::invalid UPSTREAM_REF: $REF"
+            echo "::error::invalid upstream_ref in VERIFY_LOCK: $REF"
             exit 1
           fi
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
