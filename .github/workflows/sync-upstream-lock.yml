@@ -7,6 +7,11 @@ on:
         description: "Optional upstream commit/ref. Leave empty to use code-golf/code-golf:master."
         required: false
         type: string
+      archived_only:
+        description: "Lock only archived languages instead of all upstream languages."
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -18,7 +23,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
 
     steps:
       - name: Checkout main overlay
@@ -35,5 +40,8 @@ jobs:
           ARGS=()
           if [ -n "${UPSTREAM_REF}" ]; then
             ARGS+=(--upstream-ref "${UPSTREAM_REF}")
+          fi
+          if [ "${{ inputs.archived_only }}" = "true" ]; then
+            ARGS+=(--archived-only)
           fi
           python3 scripts/rebuild_verify_lock.py "${ARGS[@]}"

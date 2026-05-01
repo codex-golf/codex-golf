@@ -6,8 +6,9 @@ The lock intentionally stays compact:
     upstream_ref <40-hex-sha>
     lang_image <lang> sha256:<digest>
 
-Only languages already present in the solutions archive are locked. New
-languages add one line when they are first accepted/needed.
+By default all languages present in upstream docker/live.Dockerfile are locked,
+so issue submissions can verify any currently supported language. A compact
+archived-only mode remains available for deliberate maintenance.
 """
 
 from __future__ import annotations
@@ -60,6 +61,17 @@ def resolve_upstream_ref(ref: str | None) -> str:
     if not SHA_RE.fullmatch(sha):
         raise SystemExit(f"invalid upstream sha: {sha}")
     return sha
+
+
+def all_upstream_languages(upstream_sha: str) -> list[str]:
+    dockerfile = run("git", "show", f"{upstream_sha}:docker/live.Dockerfile", capture=True)
+    langs = sorted(set(re.findall(r"COPY --from=codegolf/lang-([^\s]+)", dockerfile)))
+    if not langs:
+        raise SystemExit("no languages found in pinned upstream docker/live.Dockerfile")
+    for lang in langs:
+        if not LANG_RE.fullmatch(lang):
+            raise SystemExit(f"invalid language id in upstream docker/live.Dockerfile: {lang}")
+    return langs
 
 
 def archived_languages() -> list[str]:
@@ -162,15 +174,24 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--upstream-ref", help="optional upstream commit/ref; defaults to upstream master")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--archived-only",
+        action="store_true",
+        help="lock only languages currently present in origin/solutions instead of all upstream languages",
+    )
     args = parser.parse_args()
 
     run("git", "config", "user.name", "github-actions[bot]")
     run("git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
 
     upstream_sha = resolve_upstream_ref(args.upstream_ref)
-    langs = archived_languages()
-    print(f"Archived languages: {len(langs)}")
-    validate_languages_in_upstream(upstream_sha, langs)
+    if args.archived_only:
+        langs = archived_languages()
+        print(f"Archived languages: {len(langs)}")
+        validate_languages_in_upstream(upstream_sha, langs)
+    else:
+        langs = all_upstream_languages(upstream_sha)
+        print(f"Upstream languages: {len(langs)}")
     lock_text = build_lock(upstream_sha, langs)
     sync_master(upstream_sha, args.dry_run)
     commit_lock(lock_text, args.dry_run)

@@ -42,7 +42,7 @@ Never merge/rebase `master` into `main` or `solutions`. Workflows checkout pinne
 
 It pins:
 - `upstream_ref <40-hex-sha>`
-- `lang_image <lang> sha256:<digest>` for each archived language
+- `lang_image <lang> sha256:<digest>` for each upstream-supported language
 
 Verification must read `main/verify/VERIFY_LOCK`; do not use floating `master` or floating Docker `latest` during normal verification.
 
@@ -187,7 +187,7 @@ Manual equivalent:
 5. Run **Reverify all**.
 6. Run the fork harness.
 
-Do not pre-lock all upstream languages; add image digest lines only for languages present in the archive.
+Default policy is to lock all upstream-supported languages so issue submissions can verify any current language. Use `scripts/rebuild_verify_lock.py --archived-only` only for deliberate compact-lock maintenance.
 
 ## Rebuilding the public repo
 
