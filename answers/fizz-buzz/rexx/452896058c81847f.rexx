@@ -1,0 +1,1 @@
+do i=1 to 100;o="";if i//3=0 then o="Fizz";if i//5=0 then o=o"Buzz";say word(o i,1);end
