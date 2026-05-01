@@ -113,6 +113,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "bqn"
     },
     {
+      "best": "cd37bba38dd66e2c",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/brainfuck/index.json",
+      "lang": "brainfuck"
+    },
+    {
       "best": "197e50460e82fffb",
       "count": 1,
       "hole": "fizz-buzz",

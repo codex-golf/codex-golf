@@ -1,0 +1,19 @@
+{
+  "best": "cd37bba38dd66e2c",
+  "entries": [
+    {
+      "bytes": 499,
+      "chars": 499,
+      "id": "cd37bba38dd66e2c",
+      "merged_at": "2026-05-01T08:15:18Z",
+      "meta": "answers/fizz-buzz/brainfuck/cd37bba38dd66e2c.meta.json",
+      "path": "answers/fizz-buzz/brainfuck/cd37bba38dd66e2c.bf",
+      "pr": 6,
+      "sha256": "cd37bba38dd66e2ce9733020a0c7f157d3f99623c1f453a55eeeda5a904668d8",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "brainfuck",
+  "schema": "codex-golf.index.v1"
+}
