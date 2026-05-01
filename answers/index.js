@@ -50,6 +50,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "apl"
     },
     {
+      "best": "a9f5925ef80b394c",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/arkscript/index.json",
+      "lang": "arkscript"
+    },
+    {
       "best": "b03decbe30857019",
       "count": 1,
       "hole": "fizz-buzz",
