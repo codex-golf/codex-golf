@@ -211,6 +211,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "fish"
     },
     {
+      "best": "380f335b8dc9f0c3",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/forth/index.json",
+      "lang": "forth"
+    },
+    {
       "best": "7db506748b4bca64",
       "count": 1,
       "hole": "fizz-buzz",
