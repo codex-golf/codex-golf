@@ -1,0 +1,1 @@
+import std.stdio;void main(){foreach(i;1..101){auto s=i%15<1?"FizzBuzz":i%3<1?"Fizz":i%5<1?"Buzz":"";if(s.length)s.writeln;else i.writeln;}}
