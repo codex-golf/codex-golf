@@ -1,0 +1,1 @@
+(for[n(range 1 101)](print(or(+(if(% n 3)"" "Fizz")(if(% n 5)"" "Buzz"))n)))

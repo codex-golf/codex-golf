@@ -337,6 +337,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "hexagony"
     },
     {
+      "best": "e5c20078ff59a9ef",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/hy/index.json",
+      "lang": "hy"
+    },
+    {
       "best": "11ab2e5f18d4edd6",
       "count": 1,
       "hole": "fizz-buzz",
