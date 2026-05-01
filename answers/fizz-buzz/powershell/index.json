@@ -1,0 +1,20 @@
+{
+  "best": "c3048f3dc54bb6ad",
+  "entries": [
+    {
+      "bytes": 88,
+      "chars": 88,
+      "id": "c3048f3dc54bb6ad",
+      "issue": 112,
+      "merged_at": "2026-05-01T09:24:51Z",
+      "meta": "answers/fizz-buzz/powershell/c3048f3dc54bb6ad.meta.json",
+      "path": "answers/fizz-buzz/powershell/c3048f3dc54bb6ad.ps1",
+      "pr": null,
+      "sha256": "c3048f3dc54bb6adcba4dad1027fa411b8ec594c1d7dc4c7f518fd024eebed28",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "powershell",
+  "schema": "codex-golf.index.v1"
+}

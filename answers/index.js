@@ -484,6 +484,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "picat"
     },
     {
+      "best": "c3048f3dc54bb6ad",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/powershell/index.json",
+      "lang": "powershell"
+    },
+    {
       "best": "ab76e57d9b31b3b3",
       "count": 1,
       "hole": "fizz-buzz",
