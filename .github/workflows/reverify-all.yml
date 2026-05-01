@@ -36,10 +36,21 @@ jobs:
           path: main
           fetch-depth: 1
 
+      - name: Resolve upstream lock
+        id: upstream-lock
+        run: |
+          set -euo pipefail
+          REF="$(tr -d '[:space:]' < main/UPSTREAM_REF)"
+          if ! printf '%s\n' "$REF" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "::error::invalid UPSTREAM_REF: $REF"
+            exit 1
+          fi
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
       - name: Checkout upstream mirror
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: ${{ steps.upstream-lock.outputs.ref }}
           path: upstream
           fetch-depth: 1
 

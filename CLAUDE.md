@@ -13,11 +13,11 @@ Fork of `code-golf/code-golf`. Three branches with strict separation of concerns
   - `.github/workflows/{merge-on-verify,leaderboard,reverify-all}.yml`
   - `scripts/`
 
-  `main` does **not** carry `answers/` and does **not** carry the `pull_request` workflow trigger. When upstream code is needed, workflows checkout `master` separately and pass that checkout to `verify/run.sh`.
+  `main` does **not** carry `answers/` and does **not** carry the `pull_request` workflow trigger. When upstream code is needed, workflows read `UPSTREAM_REF` from `main`, checkout that exact upstream-mirror commit, and pass that checkout to `verify/run.sh`. Do not use floating `master` for verification.
 
 - **`solutions`** — **archived answers + verify trigger**, also based on the shared empty root commit:
   - `answers/<hole>/<lang>/<id>.<ext>` plus `<id>.meta.json`, `best`, and `index.json`
-  - `.github/workflows/verify-pr.yml`        — thin trigger; checks out `main` for scripts and `master` for upstream code
+  - `.github/workflows/verify-pr.yml`        — thin trigger; checks out `main` for scripts and the `main/UPSTREAM_REF` pinned upstream code
 
   PRs target this branch and still submit a staging `answers/<hole>/<lang>/answer.<ext>` file. Trusted merge converts that staging path into the archive layout. `solutions` should not carry verifier implementation files.
 
@@ -30,7 +30,7 @@ Fork of `code-golf/code-golf`. Three branches with strict separation of concerns
 4. **Disable upstream workflows via Settings**, not by editing their `.yml`.
 5. **`master` carries no overlay.** Not even README/CLAUDE.
 6. **`main` carries no `answers/` and no `pull_request` workflow.** It is not merged into `solutions`; `solutions` checks out `main` explicitly for scripts.
-7. **`solutions` carries the workflow trigger and `answers/`** but its workflow body is just a thin shell that checks out `main`, checks out `master` as upstream source, and calls `main/verify/run.sh`. No verifier logic on `solutions`.
+7. **`solutions` carries the workflow trigger and `answers/`** but its workflow body is just a thin shell that checks out `main`, reads `main/UPSTREAM_REF`, checks out that exact upstream source commit, and calls `main/verify/run.sh`. No verifier logic on `solutions`.
 8. PRs are opened against `solutions`.
 
 ## Re-syncing with upstream
@@ -46,9 +46,14 @@ git fetch upstream
 git checkout master && git merge --ff-only upstream/master
 git push origin master
 
+# Verification is pinned by main/UPSTREAM_REF. Advancing master alone must not
+# change verifier behavior. To intentionally adopt new upstream judging code,
+# update UPSTREAM_REF on main to the desired origin/master SHA, push main, then
+# run Reverify all and the fork-PR harness before mass submissions.
+
 # main/solutions are edited as overlays from the shared empty root commit.
-# Do not merge latest master into them; workflows checkout master separately
-# whenever current upstream source is needed.
+# Do not merge latest master into them; workflows checkout the pinned
+# UPSTREAM_REF commit whenever current upstream source is needed.
 ```
 
 Open PRs against `solutions` should be based on the current `solutions` tip.
@@ -229,13 +234,14 @@ come from `master`:
 
 - `master:config/data/langs.toml` is the source of truth for args/env and is
   consumed by upstream `hole.Play` / `run-lang`.
-- `master:docker/live.Dockerfile` is the source of truth for official language
-  images. `verify/run.sh` accepts a language only when that file contains
-  `COPY --from=codegolf/lang-<lang> ...`, then pulls `codegolf/lang-<lang>:latest`.
+- `master:docker/live.Dockerfile` at the pinned `UPSTREAM_REF` commit is the
+  source of truth for official language images. `verify/run.sh` accepts a
+  language only when that file contains `COPY --from=codegolf/lang-<lang> ...`,
+  then pulls `codegolf/lang-<lang>:latest`.
 
 If upstream adds a language and its official image is present in
-`docker/live.Dockerfile`, the verifier should work without editing `main`. PR
-filenames still use the staging convention
+`docker/live.Dockerfile`, the verifier should work after intentionally advancing
+`UPSTREAM_REF`. PR filenames still use the staging convention
 `answers/<hole>/<lang>/answer.<ext>`; extension choice is repository convention,
 not verifier logic.
 
