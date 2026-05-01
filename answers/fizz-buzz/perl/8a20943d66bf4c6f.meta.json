@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 51,
+  "chars": 51,
+  "ext": "pl",
+  "hole": "fizz-buzz",
+  "id": "8a20943d66bf4c6f",
+  "lang": "perl",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/fizz-buzz/perl/8a20943d66bf4c6f.pl",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "8a20943d66bf4c6fe7f79a012d58495ab7c194a5da77f39383f9c34c5dde5059",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

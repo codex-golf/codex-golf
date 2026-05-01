@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 1459,
+  "chars": 1459,
+  "ext": "asm",
+  "hole": "fizz-buzz",
+  "id": "585e37a07cc27c2b",
+  "lang": "assembly",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/fizz-buzz/assembly/585e37a07cc27c2b.asm",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "585e37a07cc27c2b814a77f01a18ddbe8e4dc85f0d5bfd32662de55ba79fb7b6",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

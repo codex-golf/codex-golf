@@ -1,0 +1,19 @@
+{
+  "best": "5a960c75be721db4",
+  "entries": [
+    {
+      "bytes": 107,
+      "chars": 107,
+      "id": "5a960c75be721db4",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/happy-numbers/python/5a960c75be721db4.meta.json",
+      "path": "answers/happy-numbers/python/5a960c75be721db4.py",
+      "pr": null,
+      "sha256": "5a960c75be721db49bc74869b76bda7db43c35e0695f6632ba0a4f2c9957cb54",
+      "was_best": true
+    }
+  ],
+  "hole": "happy-numbers",
+  "lang": "python",
+  "schema": "codex-golf.index.v1"
+}

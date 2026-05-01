@@ -1,0 +1,19 @@
+{
+  "best": "72b9cb47e96b6b66",
+  "entries": [
+    {
+      "bytes": 101,
+      "chars": 101,
+      "id": "72b9cb47e96b6b66",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/haskell/72b9cb47e96b6b66.meta.json",
+      "path": "answers/fizz-buzz/haskell/72b9cb47e96b6b66.hs",
+      "pr": null,
+      "sha256": "72b9cb47e96b6b6644cecb78a1734226e5040f7ee160516828f33b8646dd57d7",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "haskell",
+  "schema": "codex-golf.index.v1"
+}

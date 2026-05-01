@@ -1,0 +1,19 @@
+{
+  "best": "585e37a07cc27c2b",
+  "entries": [
+    {
+      "bytes": 1459,
+      "chars": 1459,
+      "id": "585e37a07cc27c2b",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/assembly/585e37a07cc27c2b.meta.json",
+      "path": "answers/fizz-buzz/assembly/585e37a07cc27c2b.asm",
+      "pr": null,
+      "sha256": "585e37a07cc27c2b814a77f01a18ddbe8e4dc85f0d5bfd32662de55ba79fb7b6",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "assembly",
+  "schema": "codex-golf.index.v1"
+}

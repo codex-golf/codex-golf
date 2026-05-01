@@ -1,0 +1,19 @@
+{
+  "best": "ab76e57d9b31b3b3",
+  "entries": [
+    {
+      "bytes": 59,
+      "chars": 59,
+      "id": "ab76e57d9b31b3b3",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/python/ab76e57d9b31b3b3.meta.json",
+      "path": "answers/fizz-buzz/python/ab76e57d9b31b3b3.py",
+      "pr": null,
+      "sha256": "ab76e57d9b31b3b3c7b4cc15a91e597023a704d798650ee72ff1ae6c353b5b55",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "python",
+  "schema": "codex-golf.index.v1"
+}

@@ -1,0 +1,19 @@
+{
+  "best": "ffd0f98a4c8388c8",
+  "entries": [
+    {
+      "bytes": 49,
+      "chars": 49,
+      "id": "ffd0f98a4c8388c8",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/odious-numbers/ruby/ffd0f98a4c8388c8.meta.json",
+      "path": "answers/odious-numbers/ruby/ffd0f98a4c8388c8.rb",
+      "pr": null,
+      "sha256": "ffd0f98a4c8388c87dff1c3950fc9417cb882094ee48dae03809fcf34da1aa7a",
+      "was_best": true
+    }
+  ],
+  "hole": "odious-numbers",
+  "lang": "ruby",
+  "schema": "codex-golf.index.v1"
+}

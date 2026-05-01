@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 63,
+  "chars": 63,
+  "ext": "fish",
+  "hole": "fizz-buzz",
+  "id": "9ffd8b8f4c1062fa",
+  "lang": "fish",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/fizz-buzz/fish/9ffd8b8f4c1062fa.fish",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "9ffd8b8f4c1062faee9736c48fea34b1f56e679c1aa37f00d065c330b73825b0",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

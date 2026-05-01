@@ -1,0 +1,19 @@
+{
+  "best": "479d8b6fdc3ee70f",
+  "entries": [
+    {
+      "bytes": 59,
+      "chars": 59,
+      "id": "479d8b6fdc3ee70f",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/abundant-numbers/ruby/479d8b6fdc3ee70f.meta.json",
+      "path": "answers/abundant-numbers/ruby/479d8b6fdc3ee70f.rb",
+      "pr": null,
+      "sha256": "479d8b6fdc3ee70fd4a1182c1c33b666e1bbbd26f3342fbff3ac573b70f29a76",
+      "was_best": true
+    }
+  ],
+  "hole": "abundant-numbers",
+  "lang": "ruby",
+  "schema": "codex-golf.index.v1"
+}

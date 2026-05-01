@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 72,
+  "chars": 72,
+  "ext": "py",
+  "hole": "abundant-numbers",
+  "id": "e1f8aeaa99c5ee43",
+  "lang": "python",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/abundant-numbers/python/e1f8aeaa99c5ee43.py",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "e1f8aeaa99c5ee43c4284c1d4b17a3172cb66ffafa8037bfbd078d746767a7c9",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

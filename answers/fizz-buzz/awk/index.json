@@ -1,0 +1,19 @@
+{
+  "best": "6988666fcd656cef",
+  "entries": [
+    {
+      "bytes": 76,
+      "chars": 76,
+      "id": "6988666fcd656cef",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/awk/6988666fcd656cef.meta.json",
+      "path": "answers/fizz-buzz/awk/6988666fcd656cef.awk",
+      "pr": null,
+      "sha256": "6988666fcd656cefa9e34edbaf25770ff9cf91f5a02f2cbb4c4ecbf28eb18a27",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "awk",
+  "schema": "codex-golf.index.v1"
+}

@@ -1,0 +1,19 @@
+{
+  "best": "9ffd8b8f4c1062fa",
+  "entries": [
+    {
+      "bytes": 63,
+      "chars": 63,
+      "id": "9ffd8b8f4c1062fa",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/fish/9ffd8b8f4c1062fa.meta.json",
+      "path": "answers/fizz-buzz/fish/9ffd8b8f4c1062fa.fish",
+      "pr": null,
+      "sha256": "9ffd8b8f4c1062faee9736c48fea34b1f56e679c1aa37f00d065c330b73825b0",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "fish",
+  "schema": "codex-golf.index.v1"
+}

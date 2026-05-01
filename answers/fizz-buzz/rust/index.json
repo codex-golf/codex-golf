@@ -1,0 +1,19 @@
+{
+  "best": "6d69eea1d00aa0dd",
+  "entries": [
+    {
+      "bytes": 100,
+      "chars": 100,
+      "id": "6d69eea1d00aa0dd",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/rust/6d69eea1d00aa0dd.meta.json",
+      "path": "answers/fizz-buzz/rust/6d69eea1d00aa0dd.rs",
+      "pr": null,
+      "sha256": "6d69eea1d00aa0ddd81b8d5447c284e298fe39ff6cd7b3b3012026de64326a4e",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "rust",
+  "schema": "codex-golf.index.v1"
+}

@@ -1,0 +1,19 @@
+{
+  "best": "b03decbe30857019",
+  "entries": [
+    {
+      "bytes": 97,
+      "chars": 97,
+      "id": "b03decbe30857019",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/arturo/b03decbe30857019.meta.json",
+      "path": "answers/fizz-buzz/arturo/b03decbe30857019.art",
+      "pr": null,
+      "sha256": "b03decbe30857019cf928548e796c90d856789e08fe8e911bee713bb62f9c3b8",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "arturo",
+  "schema": "codex-golf.index.v1"
+}

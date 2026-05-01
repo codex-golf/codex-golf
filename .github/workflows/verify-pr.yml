@@ -8,7 +8,7 @@ on:
       - "answers/**"
 
 # Untrusted side: read-only token. Just verify and emit a verdict artifact.
-# Actual labelling / commenting / merging happens in merge-on-verify.yml on main.
+# Actual labelling / commenting / archiving happens in merge-on-verify.yml on main.
 permissions:
   contents: read
   pull-requests: read
@@ -59,7 +59,6 @@ jobs:
           HEAD='${{ github.event.pull_request.head.sha }}'
 
           git fetch origin "$BASE" --depth=1 || true
-
           ALL="$(git diff --name-only "$BASE" "$HEAD")"
 
           if [ -z "$ALL" ]; then
@@ -75,7 +74,6 @@ jobs:
           fi
 
           F="$ALL"
-
           if ! printf '%s\n' "$F" | grep -qE '^answers/[a-z0-9-]+/[a-z0-9-]+/answer\.[a-z0-9]+$'; then
             echo "::error::changed file must be answers/<hole>/<lang>/answer.<ext>, got: $F"
             exit 1
@@ -98,17 +96,22 @@ jobs:
 
           HOLE="$(printf '%s\n' "$F" | cut -d/ -f2)"
           LANG="$(printf '%s\n' "$F" | cut -d/ -f3)"
-
-          SIZE="$(wc -c < "$F" | tr -d ' ')"
-          if [ "$SIZE" -gt 16384 ]; then
-            echo "::error::answer file too large: $SIZE bytes, max 16384"
-            exit 1
-          fi
+          EXT="${F##*.}"
 
           echo "file=$F"   >> "$GITHUB_OUTPUT"
           echo "hole=$HOLE" >> "$GITHUB_OUTPUT"
           echo "lang=$LANG" >> "$GITHUB_OUTPUT"
-          echo "size=$SIZE" >> "$GITHUB_OUTPUT"
+          echo "ext=$EXT"   >> "$GITHUB_OUTPUT"
+          python3 - "$F" >> "$GITHUB_OUTPUT" <<'PY'
+          import hashlib, sys
+          path = sys.argv[1]
+          data = open(path, 'rb').read()
+          digest = hashlib.sha256(data).hexdigest()
+          print(f"bytes={len(data)}")
+          print(f"chars={len(data.decode('utf-8', 'replace'))}")
+          print(f"sha256={digest}")
+          print(f"id={digest[:16]}")
+          PY
 
       - name: Verify answer
         id: run
@@ -119,8 +122,6 @@ jobs:
         run: |
           set -euo pipefail
           chmod +x main/verify/run.sh
-          # Run with stderr visible; capture stdout to file so we can grep PASS
-          # but still display it. set +e for the call so we can inspect both.
           set +e
           main/verify/run.sh "$HOLE" "$LANG" "pr/$FILE" "upstream" > /tmp/verify.out 2> /tmp/verify.err
           RC=$?
@@ -141,27 +142,30 @@ jobs:
           fi
           echo "bytes=$BYTES" >> "$GITHUB_OUTPUT"
 
-      - name: Compare against current best
-        id: cmp
+      - name: Check duplicate archive
+        id: dup
         working-directory: pr
         env:
-          FILE: ${{ steps.scan.outputs.file }}
-          NEW_BYTES: ${{ steps.run.outputs.bytes }}
+          HOLE:   ${{ steps.scan.outputs.hole }}
+          LANG:   ${{ steps.scan.outputs.lang }}
+          SHA256: ${{ steps.scan.outputs.sha256 }}
         run: |
           set -euo pipefail
           git fetch origin solutions --depth=1
-          if git show "origin/solutions:$FILE" > /tmp/old-answer 2>/dev/null; then
-            OLD_BYTES="$(wc -c < /tmp/old-answer | tr -d ' ')"
-            echo "Current best: $OLD_BYTES bytes"
-            echo "Submitted:    $NEW_BYTES bytes"
-            if [ "$NEW_BYTES" -ge "$OLD_BYTES" ]; then
-              echo "::error::Not shorter than current best: $NEW_BYTES >= $OLD_BYTES"
-              exit 1
-            fi
-            echo "old=$OLD_BYTES" >> "$GITHUB_OUTPUT"
-          else
-            echo "No existing record"
-            echo "old=none" >> "$GITHUB_OUTPUT"
+          set +e
+          git show "origin/solutions:answers/$HOLE/$LANG/index.json" > /tmp/index.json 2>/dev/null
+          RC=$?
+          set -e
+          if [ "$RC" = 0 ]; then
+            python3 - "$SHA256" /tmp/index.json <<'PY'
+            import json, sys
+            sha = sys.argv[1]
+            index = json.load(open(sys.argv[2]))
+            for entry in index.get('entries', []):
+                if entry.get('sha256') == sha:
+                    print(f"::error::answer already archived as {entry.get('id')}")
+                    sys.exit(1)
+            PY
           fi
 
       - name: Emit verdict (success)
@@ -176,15 +180,18 @@ jobs:
           FILE:      ${{ steps.scan.outputs.file }}
           HOLE:      ${{ steps.scan.outputs.hole }}
           LANG:      ${{ steps.scan.outputs.lang }}
+          EXT:       ${{ steps.scan.outputs.ext }}
           BYTES:     ${{ steps.run.outputs.bytes }}
-          OLD:       ${{ steps.cmp.outputs.old }}
+          CHARS:     ${{ steps.scan.outputs.chars }}
+          SHA256:    ${{ steps.scan.outputs.sha256 }}
+          ID:        ${{ steps.scan.outputs.id }}
           RUN_URL:   ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
           mkdir -p verdict
           cat > verdict/verdict.json <<JSON
           {
-            "schema": "codex-golf.verdict.v1",
+            "schema": "codex-golf.verdict.v2",
             "status": "pass",
             "pr_number": ${PR_NUMBER},
             "head_sha":  "${HEAD_SHA}",
@@ -195,8 +202,11 @@ jobs:
             "file":      "${FILE}",
             "hole":      "${HOLE}",
             "lang":      "${LANG}",
+            "ext":       "${EXT}",
             "bytes":     ${BYTES},
-            "old":       "${OLD}",
+            "chars":     ${CHARS},
+            "sha256":    "${SHA256}",
+            "id":        "${ID}",
             "run_url":   "${RUN_URL}"
           }
           JSON
@@ -214,7 +224,7 @@ jobs:
           mkdir -p verdict
           cat > verdict/verdict.json <<JSON
           {
-            "schema": "codex-golf.verdict.v1",
+            "schema": "codex-golf.verdict.v2",
             "status": "fail",
             "pr_number": ${PR_NUMBER},
             "head_sha":  "${HEAD_SHA}",

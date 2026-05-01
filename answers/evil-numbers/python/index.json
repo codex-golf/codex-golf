@@ -1,0 +1,19 @@
+{
+  "best": "09982414979a64f5",
+  "entries": [
+    {
+      "bytes": 65,
+      "chars": 65,
+      "id": "09982414979a64f5",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/evil-numbers/python/09982414979a64f5.meta.json",
+      "path": "answers/evil-numbers/python/09982414979a64f5.py",
+      "pr": null,
+      "sha256": "09982414979a64f5dacdf7848bea849890f0448be89d0782803a756f057fda0d",
+      "was_best": true
+    }
+  ],
+  "hole": "evil-numbers",
+  "lang": "python",
+  "schema": "codex-golf.index.v1"
+}

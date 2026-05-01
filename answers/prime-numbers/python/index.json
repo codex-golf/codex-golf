@@ -1,0 +1,19 @@
+{
+  "best": "012c683509189be7",
+  "entries": [
+    {
+      "bytes": 74,
+      "chars": 74,
+      "id": "012c683509189be7",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/prime-numbers/python/012c683509189be7.meta.json",
+      "path": "answers/prime-numbers/python/012c683509189be7.py",
+      "pr": null,
+      "sha256": "012c683509189be7b1410f5a10acfdc6664f6291ab3f8c3a1497928540af2e07",
+      "was_best": true
+    }
+  ],
+  "hole": "prime-numbers",
+  "lang": "python",
+  "schema": "codex-golf.index.v1"
+}

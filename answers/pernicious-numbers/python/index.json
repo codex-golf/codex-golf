@@ -1,0 +1,19 @@
+{
+  "best": "f1c2bbc123ae7e1d",
+  "entries": [
+    {
+      "bytes": 114,
+      "chars": 114,
+      "id": "f1c2bbc123ae7e1d",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/pernicious-numbers/python/f1c2bbc123ae7e1d.meta.json",
+      "path": "answers/pernicious-numbers/python/f1c2bbc123ae7e1d.py",
+      "pr": null,
+      "sha256": "f1c2bbc123ae7e1d89788f43b17c2776df9a4f158b9d16a64bcaa2841aa5a881",
+      "was_best": true
+    }
+  ],
+  "hole": "pernicious-numbers",
+  "lang": "python",
+  "schema": "codex-golf.index.v1"
+}

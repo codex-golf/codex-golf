@@ -1,0 +1,19 @@
+{
+  "best": "4d186b0ce1fa907e",
+  "entries": [
+    {
+      "bytes": 90,
+      "chars": 90,
+      "id": "4d186b0ce1fa907e",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/java/4d186b0ce1fa907e.meta.json",
+      "path": "answers/fizz-buzz/java/4d186b0ce1fa907e.java",
+      "pr": null,
+      "sha256": "4d186b0ce1fa907ec7d9f7433ed88e219e573de9d691f2c3885b08fc0ed519e7",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "java",
+  "schema": "codex-golf.index.v1"
+}

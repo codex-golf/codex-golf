@@ -1,0 +1,19 @@
+{
+  "best": "d44165395da60732",
+  "entries": [
+    {
+      "bytes": 171,
+      "chars": 171,
+      "id": "d44165395da60732",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/befunge/d44165395da60732.meta.json",
+      "path": "answers/fizz-buzz/befunge/d44165395da60732.befunge",
+      "pr": null,
+      "sha256": "d44165395da60732a8bed900bd13f46164b9e7c1c683eb83843d5d5704540c02",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "befunge",
+  "schema": "codex-golf.index.v1"
+}

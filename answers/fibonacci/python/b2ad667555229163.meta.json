@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 46,
+  "chars": 46,
+  "ext": "py",
+  "hole": "fibonacci",
+  "id": "b2ad667555229163",
+  "lang": "python",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/fibonacci/python/b2ad667555229163.py",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "b2ad6675552291631c22af29792612741dbd9f5c26701a2aacf78d8b2fa69b92",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

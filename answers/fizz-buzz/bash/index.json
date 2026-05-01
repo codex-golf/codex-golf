@@ -1,0 +1,19 @@
+{
+  "best": "eb2fb0d9f38512e0",
+  "entries": [
+    {
+      "bytes": 63,
+      "chars": 63,
+      "id": "eb2fb0d9f38512e0",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/bash/eb2fb0d9f38512e0.meta.json",
+      "path": "answers/fizz-buzz/bash/eb2fb0d9f38512e0.sh",
+      "pr": null,
+      "sha256": "eb2fb0d9f38512e077af5fb802f0b7eaa6bb8d82058559d66ce189d2565236a7",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "bash",
+  "schema": "codex-golf.index.v1"
+}

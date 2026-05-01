@@ -1,0 +1,19 @@
+{
+  "best": "8a20943d66bf4c6f",
+  "entries": [
+    {
+      "bytes": 51,
+      "chars": 51,
+      "id": "8a20943d66bf4c6f",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/perl/8a20943d66bf4c6f.meta.json",
+      "path": "answers/fizz-buzz/perl/8a20943d66bf4c6f.pl",
+      "pr": null,
+      "sha256": "8a20943d66bf4c6fe7f79a012d58495ab7c194a5da77f39383f9c34c5dde5059",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "perl",
+  "schema": "codex-golf.index.v1"
+}

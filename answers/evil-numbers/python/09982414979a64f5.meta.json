@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 65,
+  "chars": 65,
+  "ext": "py",
+  "hole": "evil-numbers",
+  "id": "09982414979a64f5",
+  "lang": "python",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/evil-numbers/python/09982414979a64f5.py",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "09982414979a64f5dacdf7848bea849890f0448be89d0782803a756f057fda0d",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 67,
+  "chars": 67,
+  "ext": "rb",
+  "hole": "fizz-buzz",
+  "id": "711c754499dd7018",
+  "lang": "ruby",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/fizz-buzz/ruby/711c754499dd7018.rb",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "711c754499dd70186e23b4dca81dd6a9b31b22b8dfbbc817fafd8a24ad3ff7f5",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

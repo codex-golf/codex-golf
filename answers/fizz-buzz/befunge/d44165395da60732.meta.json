@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 171,
+  "chars": 171,
+  "ext": "befunge",
+  "hole": "fizz-buzz",
+  "id": "d44165395da60732",
+  "lang": "befunge",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/fizz-buzz/befunge/d44165395da60732.befunge",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "d44165395da60732a8bed900bd13f46164b9e7c1c683eb83843d5d5704540c02",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

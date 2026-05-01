@@ -1,0 +1,19 @@
+{
+  "best": "711c754499dd7018",
+  "entries": [
+    {
+      "bytes": 67,
+      "chars": 67,
+      "id": "711c754499dd7018",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/ruby/711c754499dd7018.meta.json",
+      "path": "answers/fizz-buzz/ruby/711c754499dd7018.rb",
+      "pr": null,
+      "sha256": "711c754499dd70186e23b4dca81dd6a9b31b22b8dfbbc817fafd8a24ad3ff7f5",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "ruby",
+  "schema": "codex-golf.index.v1"
+}

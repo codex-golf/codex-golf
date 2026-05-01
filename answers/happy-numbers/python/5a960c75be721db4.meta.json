@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 107,
+  "chars": 107,
+  "ext": "py",
+  "hole": "happy-numbers",
+  "id": "5a960c75be721db4",
+  "lang": "python",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/happy-numbers/python/5a960c75be721db4.py",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "5a960c75be721db49bc74869b76bda7db43c35e0695f6632ba0a4f2c9957cb54",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

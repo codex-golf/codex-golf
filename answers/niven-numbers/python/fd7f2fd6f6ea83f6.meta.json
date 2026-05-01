@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 70,
+  "chars": 70,
+  "ext": "py",
+  "hole": "niven-numbers",
+  "id": "fd7f2fd6f6ea83f6",
+  "lang": "python",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/niven-numbers/python/fd7f2fd6f6ea83f6.py",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "fd7f2fd6f6ea83f64e99943d8c36f2c54dfdfe87a13fdc2e90301d160824ea5b",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

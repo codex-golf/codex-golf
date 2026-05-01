@@ -1,0 +1,26 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 59,
+  "chars": 59,
+  "ext": "py",
+  "hole": "fizz-buzz",
+  "id": "ab76e57d9b31b3b3",
+  "lang": "python",
+  "merged_at": "2026-05-01T06:55:56Z",
+  "path": "answers/fizz-buzz/python/ab76e57d9b31b3b3.py",
+  "pr": null,
+  "schema": "codex-golf.answer.v1",
+  "sha256": "ab76e57d9b31b3b3c7b4cc15a91e597023a704d798650ee72ff1ae6c353b5b55",
+  "source": {
+    "kind": "legacy-single-answer-migration"
+  },
+  "submitted_at": null,
+  "verification": null
+}

@@ -1,0 +1,19 @@
+{
+  "best": "b2ad667555229163",
+  "entries": [
+    {
+      "bytes": 46,
+      "chars": 46,
+      "id": "b2ad667555229163",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fibonacci/python/b2ad667555229163.meta.json",
+      "path": "answers/fibonacci/python/b2ad667555229163.py",
+      "pr": null,
+      "sha256": "b2ad6675552291631c22af29792612741dbd9f5c26701a2aacf78d8b2fa69b92",
+      "was_best": true
+    }
+  ],
+  "hole": "fibonacci",
+  "lang": "python",
+  "schema": "codex-golf.index.v1"
+}

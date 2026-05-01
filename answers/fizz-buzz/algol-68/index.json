@@ -1,0 +1,19 @@
+{
+  "best": "f7cc7adea1aea97a",
+  "entries": [
+    {
+      "bytes": 221,
+      "chars": 221,
+      "id": "f7cc7adea1aea97a",
+      "merged_at": "2026-05-01T06:55:56Z",
+      "meta": "answers/fizz-buzz/algol-68/f7cc7adea1aea97a.meta.json",
+      "path": "answers/fizz-buzz/algol-68/f7cc7adea1aea97a.alg",
+      "pr": null,
+      "sha256": "f7cc7adea1aea97a55ac88d5efad856e5ae48fa44bb21c213d63c116541de571",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "algol-68",
+  "schema": "codex-golf.index.v1"
+}
