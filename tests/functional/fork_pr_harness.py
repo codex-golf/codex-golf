@@ -69,6 +69,14 @@ CASES: dict[str, dict[str, Any]] = {
         "expect": "pass",
         "title_prefix": "e2e-pass",
     },
+    "pass-python-leap-years": {
+        "hole": "leap-years",
+        "lang": "python",
+        "source_ext": "py",
+        "dest_ext": "py",
+        "expect": "pass",
+        "title_prefix": "e2e-pass",
+    },
 }
 
 

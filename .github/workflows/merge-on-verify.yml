@@ -126,7 +126,7 @@ jobs:
           ID:      ${{ steps.archive.outputs.id }}
           BEST:    ${{ steps.archive.outputs.best_result }}
           PREV:    ${{ steps.archive.outputs.previous_best_bytes }}
-          PATH:    ${{ steps.archive.outputs.path }}
+          ARCHIVE_PATH: ${{ steps.archive.outputs.path }}
         run: |
           set -euo pipefail
           gh pr edit "$PR" --repo "$REPO" --remove-label verify-fail || true
@@ -138,7 +138,7 @@ jobs:
             RESULT="archived; best unchanged"
           fi
           gh pr comment "$PR" --repo "$REPO" \
-            --body "✅ **$HOLE / $LANG** passed and archived as \`$ID\` (**${BYTES}B**): $RESULT.\n\nPath: \`$PATH\`."
+            --body "✅ **$HOLE / $LANG** passed and archived as \`$ID\` (**${BYTES}B**): $RESULT.\n\nPath: \`$ARCHIVE_PATH\`."
 
       - name: Apply duplicate label + comment
         if: steps.gt.outputs.result == 'pass' && steps.archive.outputs.result == 'duplicate'
