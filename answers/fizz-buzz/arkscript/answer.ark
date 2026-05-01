@@ -1,0 +1,1 @@
+(mut i 0)(while (> 100 i) (begin (set i (+ 1 i)) (if (= 0 (mod i 15)) (print "FizzBuzz") (if (= 0 (mod i 3)) (print "Fizz") (if (= 0 (mod i 5)) (print "Buzz") (print i))))))
