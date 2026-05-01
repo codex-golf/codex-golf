@@ -1,0 +1,19 @@
+{
+  "best": "1a7957ce9ab18fbd",
+  "entries": [
+    {
+      "bytes": 35,
+      "chars": 35,
+      "id": "1a7957ce9ab18fbd",
+      "merged_at": "2026-05-01T08:19:11Z",
+      "meta": "answers/fizz-buzz/cjam/1a7957ce9ab18fbd.meta.json",
+      "path": "answers/fizz-buzz/cjam/1a7957ce9ab18fbd.cjam",
+      "pr": 9,
+      "sha256": "1a7957ce9ab18fbda9cec3a86562f2164e9f3e8849f016a02a77048f78c710fb",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "cjam",
+  "schema": "codex-golf.index.v1"
+}

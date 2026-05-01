@@ -141,6 +141,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "civet"
     },
     {
+      "best": "1a7957ce9ab18fbd",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/cjam/index.json",
+      "lang": "cjam"
+    },
+    {
       "best": "1e6e804b4429411c",
       "count": 1,
       "hole": "fizz-buzz",
