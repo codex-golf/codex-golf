@@ -1,0 +1,19 @@
+{
+  "best": "27f677523c1a0974",
+  "entries": [
+    {
+      "bytes": 72,
+      "chars": 72,
+      "id": "27f677523c1a0974",
+      "merged_at": "2026-05-01T08:46:15Z",
+      "meta": "answers/fizz-buzz/groovy/27f677523c1a0974.meta.json",
+      "path": "answers/fizz-buzz/groovy/27f677523c1a0974.groovy",
+      "pr": 28,
+      "sha256": "27f677523c1a097490925f48ce3d6094de7adaba21659d9acb9b3702ad2ebee7",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "groovy",
+  "schema": "codex-golf.index.v1"
+}
