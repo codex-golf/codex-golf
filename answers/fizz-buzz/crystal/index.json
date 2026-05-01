@@ -1,0 +1,19 @@
+{
+  "best": "df4586cce44a7dfa",
+  "entries": [
+    {
+      "bytes": 80,
+      "chars": 80,
+      "id": "df4586cce44a7dfa",
+      "merged_at": "2026-05-01T08:27:56Z",
+      "meta": "answers/fizz-buzz/crystal/df4586cce44a7dfa.meta.json",
+      "path": "answers/fizz-buzz/crystal/df4586cce44a7dfa.cr",
+      "pr": 15,
+      "sha256": "df4586cce44a7dfa0f38ef27960dc20f584982b617e29617771df204da6a2aff",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "crystal",
+  "schema": "codex-golf.index.v1"
+}

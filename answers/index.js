@@ -190,6 +190,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "cpp"
     },
     {
+      "best": "df4586cce44a7dfa",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/crystal/index.json",
+      "lang": "crystal"
+    },
+    {
       "best": "9ffd8b8f4c1062fa",
       "count": 1,
       "hole": "fizz-buzz",
