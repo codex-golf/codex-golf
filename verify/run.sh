@@ -10,20 +10,37 @@ set -euo pipefail
 HOLE="$1"; LANG="$2"; SOL="$3"; UPSTREAM="${4:-.}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 UPSTREAM_ROOT="$(cd "$UPSTREAM" && pwd)"
+LOCK="$ROOT/LANG_IMAGE_LOCK.json"
 
 [ -f "$SOL" ] || { echo "::error::no solution file: $SOL"; exit 1; }
+[ -f "$LOCK" ] || { echo "::error::missing language image lock: $LOCK"; exit 1; }
 case "$LANG" in
   *[!a-z0-9-]*|'') echo "::error::invalid language id: $LANG"; exit 1 ;;
 esac
 
-# Do not maintain a parallel language registry in this overlay. Upstream's
-# docker/live.Dockerfile is the source of truth for official language images;
-# upstream config/data/langs.toml still drives hole.Play()/run-lang execution.
-if ! grep -Eq "^[[:space:]]*COPY --from=codegolf/lang-${LANG}[[:space:]]" "$UPSTREAM_ROOT/docker/live.Dockerfile"; then
-  echo "::error::unsupported lang or missing official image in master: $LANG"
+LOCK_UPSTREAM_REF="$(jq -r '.upstream_ref // empty' "$LOCK")"
+ACTUAL_UPSTREAM_REF="$(git -C "$UPSTREAM_ROOT" rev-parse HEAD)"
+if [ "$LOCK_UPSTREAM_REF" != "$ACTUAL_UPSTREAM_REF" ]; then
+  echo "::error::LANG_IMAGE_LOCK.json upstream_ref ($LOCK_UPSTREAM_REF) does not match checked-out upstream ($ACTUAL_UPSTREAM_REF)"
   exit 1
 fi
-IMAGE="codegolf/lang-${LANG}:latest"
+
+# Do not maintain a parallel args/env registry in this overlay. Upstream's
+# config/data/langs.toml still drives hole.Play()/run-lang execution. The only
+# local registry is an immutable Docker digest lock, so code and language
+# rootfs versions move only when main explicitly updates both locks.
+if ! grep -Eq "^[[:space:]]*COPY --from=codegolf/lang-${LANG}[[:space:]]" "$UPSTREAM_ROOT/docker/live.Dockerfile"; then
+  echo "::error::unsupported lang or missing official image in pinned upstream: $LANG"
+  exit 1
+fi
+IMAGE_NAME="$(jq -r --arg l "$LANG" '.images[$l].image // empty' "$LOCK")"
+IMAGE_DIGEST="$(jq -r --arg l "$LANG" '.images[$l].digest // empty' "$LOCK")"
+EXPECTED_IMAGE="codegolf/lang-${LANG}"
+if [ "$IMAGE_NAME" != "$EXPECTED_IMAGE" ] || ! printf '%s\n' "$IMAGE_DIGEST" | grep -Eq '^sha256:[0-9a-f]{64}$'; then
+  echo "::error::missing or invalid Docker digest lock for lang=$LANG"
+  exit 1
+fi
+IMAGE="${IMAGE_NAME}@${IMAGE_DIGEST}"
 
 WORKDIR="$(mktemp -d)"
 trap 'rm -rf "$WORKDIR"' EXIT

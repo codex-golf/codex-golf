@@ -9,6 +9,7 @@ Fork of `code-golf/code-golf`. Three branches with strict separation of concerns
 - **`main`** *(default)* — **our automation overlay**, based on a shared empty root commit:
   - `README.md`        — public-facing repo note
   - `CLAUDE.md`        — this file
+  - `UPSTREAM_REF` and `LANG_IMAGE_LOCK.json` — pinned upstream code and Docker language images
   - `verify/run.sh` and `verify/upstream-play.go` — thin verifier wrapper (called from solutions' workflow)
   - `.github/workflows/{merge-on-verify,leaderboard,reverify-all}.yml`
   - `scripts/`
@@ -46,10 +47,11 @@ git fetch upstream
 git checkout master && git merge --ff-only upstream/master
 git push origin master
 
-# Verification is pinned by main/UPSTREAM_REF. Advancing master alone must not
-# change verifier behavior. To intentionally adopt new upstream judging code,
-# update UPSTREAM_REF on main to the desired origin/master SHA, push main, then
-# run Reverify all and the fork-PR harness before mass submissions.
+# Verification is pinned by main/UPSTREAM_REF and main/LANG_IMAGE_LOCK.json.
+# Advancing master alone must not change verifier behavior. To intentionally
+# adopt new upstream judging code or language images, update UPSTREAM_REF and
+# the Docker digest lock together on main, push main, then run Reverify all and
+# the fork-PR harness before mass submissions.
 
 # main/solutions are edited as overlays from the shared empty root commit.
 # Do not merge latest master into them; workflows checkout the pinned
@@ -235,13 +237,14 @@ come from `master`:
 - `master:config/data/langs.toml` is the source of truth for args/env and is
   consumed by upstream `hole.Play` / `run-lang`.
 - `master:docker/live.Dockerfile` at the pinned `UPSTREAM_REF` commit is the
-  source of truth for official language images. `verify/run.sh` accepts a
-  language only when that file contains `COPY --from=codegolf/lang-<lang> ...`,
-  then pulls `codegolf/lang-<lang>:latest`.
+  source of truth for which official language images exist. `LANG_IMAGE_LOCK.json`
+  pins the immutable Docker digest for each accepted language; `verify/run.sh`
+  pulls `codegolf/lang-<lang>@sha256:<digest>`, never floating `latest`.
 
 If upstream adds a language and its official image is present in
 `docker/live.Dockerfile`, the verifier should work after intentionally advancing
-`UPSTREAM_REF`. PR filenames still use the staging convention
+`UPSTREAM_REF` and adding the corresponding image digest to `LANG_IMAGE_LOCK.json`.
+PR filenames still use the staging convention
 `answers/<hole>/<lang>/answer.<ext>`; extension choice is repository convention,
 not verifier logic.
 
