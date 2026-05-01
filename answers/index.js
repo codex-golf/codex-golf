@@ -575,6 +575,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "sed"
     },
     {
+      "best": "c7ab99525056e22c",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/sql/index.json",
+      "lang": "sql"
+    },
+    {
       "best": "5a960c75be721db4",
       "count": 1,
       "hole": "happy-numbers",
