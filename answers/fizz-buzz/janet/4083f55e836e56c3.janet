@@ -1,0 +1,1 @@
+(for i 1 101(def s(string(if(zero?(% i 3))"Fizz""")(if(zero?(% i 5))"Buzz""")))(print(if(=(length s)0)(string i)s)))
