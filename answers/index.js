@@ -253,6 +253,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "groovy"
     },
     {
+      "best": "642cd18c79f28630",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/harbour/index.json",
+      "lang": "harbour"
+    },
+    {
       "best": "9f7eb09590621c50",
       "count": 1,
       "hole": "fizz-buzz",
