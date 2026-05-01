@@ -59,6 +59,14 @@ git push origin master
 
 Open PRs against `solutions` should be based on the current `solutions` tip.
 
+A manual workflow, **Sync upstream and rebuild lock**, performs the safe version
+of this process: it syncs `master` to either a provided upstream commit/ref or
+latest `code-golf/code-golf:master`, then rebuilds `VERIFY_LOCK` for the current
+archived languages in `solutions`. If a specific upstream commit is supplied,
+`master` is set to that upstream commit with `--force-with-lease` because
+`master` is only a mirror. It intentionally does not pre-lock every upstream
+language; each archived language adds one `lang_image` line.
+
 ## Recreating this repository from scratch
 
 Use this when we want a clean trunk after failed/noisy PR experiments: delete
@@ -288,11 +296,19 @@ not verifier logic.
    - On regression: posts an issue with the failing entries; does **not**
      auto-evict (manual decision: do we follow upstream change, or open a PR
      against upstream?).
-5. ~~**Slim overlay branches**~~ — done.
+5. **Manual upstream/runtime lock refresh** — see `.github/workflows/sync-upstream-lock.yml`.
+   - `workflow_dispatch` input `upstream_ref` is optional. Empty means latest
+     upstream `master`; a supplied value may be a specific upstream commit/ref.
+   - The workflow syncs `master` first (`--force-with-lease` when setting it to
+     an explicit upstream commit), then rebuilds compact `VERIFY_LOCK` from
+     current `solutions` archive languages and Docker Hub image digests.
+   - After it changes `VERIFY_LOCK`, run `Reverify all` and the fork harness
+     before mass submissions resume.
+6. ~~**Slim overlay branches**~~ — done.
    - `main` and `solutions` are based on a shared empty root commit instead of latest `master`.
    - `master` remains the current upstream mirror.
    - Actions checkout `master` separately whenever upstream code is needed; `verify/run.sh` builds official `run-lang.c` and `hole.Play()` from that checkout while using this overlay's tiny wrapper and language registry.
-6. **Reusable fork-PR action test harness** — see `scripts/fork_pr_harness.py`.
+7. **Reusable fork-PR action test harness** — see `scripts/fork_pr_harness.py`.
    - Simulates the real outside contributor flow: fork repo → push answer branch
      to the fork → open PR from fork into `codex-golf/codex-golf:solutions` →
      wait for `Verify PR` → wait for `Merge on Verify` → assert

@@ -1,0 +1,39 @@
+name: Sync upstream and rebuild lock
+
+on:
+  workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: "Optional upstream commit/ref. Leave empty to use code-golf/code-golf:master."
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream-lock
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout main overlay
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Sync master and rebuild VERIFY_LOCK
+        env:
+          UPSTREAM_REF: ${{ inputs.upstream_ref }}
+        run: |
+          set -euo pipefail
+          ARGS=()
+          if [ -n "${UPSTREAM_REF}" ]; then
+            ARGS+=(--upstream-ref "${UPSTREAM_REF}")
+          fi
+          python3 scripts/rebuild_verify_lock.py "${ARGS[@]}"
