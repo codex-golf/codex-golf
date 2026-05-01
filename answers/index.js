@@ -351,6 +351,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "iogii"
     },
     {
+      "best": "53b18377a1bb86fa",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/j/index.json",
+      "lang": "j"
+    },
+    {
       "best": "4083f55e836e56c3",
       "count": 1,
       "hole": "fizz-buzz",
