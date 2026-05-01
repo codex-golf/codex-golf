@@ -1,0 +1,1 @@
+(loop for i from 1 to 100 do(format t"~a~%"(cond((= 0(mod i 15))"FizzBuzz")((= 0(mod i 3))"Fizz")((= 0(mod i 5))"Buzz")(t i))))

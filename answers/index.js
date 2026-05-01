@@ -176,6 +176,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "coffeescript"
     },
     {
+      "best": "1b7397f013e994c7",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/common-lisp/index.json",
+      "lang": "common-lisp"
+    },
+    {
       "best": "1e6e804b4429411c",
       "count": 1,
       "hole": "fizz-buzz",
