@@ -1,0 +1,19 @@
+{
+  "best": "174b60e1cda95b26",
+  "entries": [
+    {
+      "bytes": 360,
+      "chars": 360,
+      "id": "174b60e1cda95b26",
+      "merged_at": "2026-05-01T08:43:19Z",
+      "meta": "answers/fizz-buzz/gleam/174b60e1cda95b26.meta.json",
+      "path": "answers/fizz-buzz/gleam/174b60e1cda95b26.gleam",
+      "pr": 26,
+      "sha256": "174b60e1cda95b26b8d24089d0d7cd6fc50c760da605ff9dd4cb5bbebcd4ce1d",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "gleam",
+  "schema": "codex-golf.index.v1"
+}

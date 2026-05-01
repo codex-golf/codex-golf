@@ -225,6 +225,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "fortran"
     },
     {
+      "best": "174b60e1cda95b26",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/gleam/index.json",
+      "lang": "gleam"
+    },
+    {
       "best": "7db506748b4bca64",
       "count": 1,
       "hole": "fizz-buzz",
