@@ -12,7 +12,8 @@ Fork of `code-golf/code-golf`. Three branches with strict separation of concerns
   - `VERIFY_LOCK` — pinned upstream code and Docker language image digests
   - `verify/run.sh` and `verify/upstream-play.go` — thin verifier wrapper (called from solutions' workflow)
   - `.github/workflows/{merge-on-verify,reverify-all,sync-upstream-lock}.yml`
-  - `scripts/`
+  - `scripts/` — runtime/maintenance scripts used by workflows
+  - `tests/functional/` — manual/e2e functional test harnesses
 
   `main` does **not** carry `answers/` and does **not** carry the `pull_request` workflow trigger. When upstream code is needed, workflows read `VERIFY_LOCK` from `main`, checkout the pinned upstream-mirror commit, and pass that checkout to `verify/run.sh`. Do not use floating `master` for verification.
 
@@ -129,7 +130,7 @@ from `code-golf/code-golf`** relationship while keeping our branches slim.
    EMPTY=$(git rev-parse HEAD)
 
    git checkout -B main "$EMPTY"
-   # add only: README.md, LICENSE, CLAUDE.md, verify/, scripts/,
+   # add only: README.md, LICENSE, CLAUDE.md, verify/, scripts/, tests/,
    # .github/workflows/{merge-on-verify,reverify-all,sync-upstream-lock}.yml
    git commit -m 'main branch: automation overlay on empty base'
    git push --force origin main:main
@@ -308,7 +309,7 @@ not verifier logic.
    - `main` and `solutions` are based on a shared empty root commit instead of latest `master`.
    - `master` remains the current upstream mirror.
    - Actions checkout `master` separately whenever upstream code is needed; `verify/run.sh` builds official `run-lang.c` and `hole.Play()` from that checkout while using this overlay's tiny wrapper and language registry.
-7. **Reusable fork-PR action test harness** — see `scripts/fork_pr_harness.py`.
+7. **Reusable fork-PR action test harness** — see `tests/functional/fork_pr_harness.py`.
    - Simulates the real outside contributor flow: fork repo → push answer branch
      to the fork → open PR from fork into `codex-golf/codex-golf:solutions` →
      wait for `Verify PR` → wait for `Merge on Verify` → assert
@@ -327,4 +328,6 @@ not verifier logic.
    - E2E result: `fail-05ab1e` passed using `heshenclaw/codex-golf-e2e` → PR
      #34 got `verify-fail`, was closed, and the fork branch was deleted.
    - Acceptance criterion: every verifier/merger architecture change must pass
-     this fork-PR harness before mass submissions resume.
+     this fork-PR harness before mass submissions resume. Future functional/e2e
+     tests should live under `tests/functional/`, not mixed into runtime
+     workflow scripts.
