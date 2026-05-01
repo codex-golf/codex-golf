@@ -9,17 +9,14 @@ Preferred issue form fields:
     ### Language
     python
 
-    ### File extension
-    py
-
     ### Answer code
     ```text
     exact answer bytes as UTF-8 text
     ```
 
-The workflow computes sha256 itself. Notes are allowed in the issue but are not
-archived. The parser also accepts the older `answer-base64` fenced format for
-exact-byte compatibility.
+The workflow computes sha256 itself and derives the archive file extension from
+the language id. Notes are allowed in the issue but are not archived. The parser
+also accepts the older `answer-base64` fenced format for exact-byte compatibility.
 """
 from __future__ import annotations
 
@@ -44,6 +41,101 @@ LANG_RE = re.compile(r"^[a-z0-9-]+$")
 EXT_RE = re.compile(r"^[a-z0-9]+$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 MAX_BYTES = 128 * 1024
+
+EXT_BY_LANG = {
+    "05ab1e": "abe",
+    "algol-68": "alg",
+    "apl": "apl",
+    "arkscript": "ark",
+    "arturo": "art",
+    "assembly": "asm",
+    "awk": "awk",
+    "bash": "sh",
+    "basic": "bas",
+    "befunge": "befunge",
+    "berry": "be",
+    "bqn": "bqn",
+    "brainfuck": "bf",
+    "c": "c",
+    "c-sharp": "cs",
+    "civet": "civet",
+    "cjam": "cjam",
+    "clojure": "clj",
+    "cobol": "cob",
+    "coconut": "coco",
+    "coffeescript": "coffee",
+    "common-lisp": "lisp",
+    "cpp": "cpp",
+    "crystal": "cr",
+    "d": "d",
+    "dart": "dart",
+    "egel": "egel",
+    "elixir": "exs",
+    "erlang": "erl",
+    "f-sharp": "fs",
+    "factor": "factor",
+    "fennel": "fnl",
+    "fish": "fish",
+    "forth": "fth",
+    "fortran": "f90",
+    "gleam": "gleam",
+    "go": "go",
+    "golfscript": "gs",
+    "groovy": "groovy",
+    "harbour": "prg",
+    "hare": "ha",
+    "haskell": "hs",
+    "haxe": "hx",
+    "hexagony": "hxg",
+    "hy": "hy",
+    "iogii": "iogii",
+    "j": "ijs",
+    "janet": "janet",
+    "java": "java",
+    "javascript": "js",
+    "jq": "jq",
+    "julia": "jl",
+    "k": "k",
+    "knight": "knight",
+    "kotlin": "kt",
+    "lily": "lily",
+    "lua": "lua",
+    "luau": "luau",
+    "nim": "nim",
+    "ocaml": "ml",
+    "odin": "odin",
+    "pascal": "pas",
+    "perl": "pl",
+    "php": "php",
+    "picat": "picat",
+    "powershell": "ps1",
+    "prolog": "pro",
+    "python": "py",
+    "qore": "qore",
+    "r": "r",
+    "racket": "racket",
+    "raku": "raku",
+    "rebol": "reb",
+    "rexx": "rexx",
+    "rockstar": "rock",
+    "ruby": "rb",
+    "rust": "rs",
+    "scala": "scala",
+    "scheme": "scm",
+    "sed": "sed",
+    "sql": "sql",
+    "squirrel": "nut",
+    "stax": "stax",
+    "swift": "swift",
+    "tcl": "tcl",
+    "umka": "umka",
+    "v": "v",
+    "vala": "vala",
+    "viml": "vim",
+    "vyxal": "vyxal",
+    "wren": "wren",
+    "zig": "zig",
+}
 
 
 def run(args: list[str], *, check: bool = True, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -122,11 +214,15 @@ def parse_issue(event: dict[str, Any]) -> dict[str, Any]:
 
     hole = required_value(fields, body, "hole", "Hole")
     lang = required_value(fields, body, "lang", "Language")
-    ext = required_value(fields, body, "ext", "File extension", "Extension")
+    ext = fields.get("ext")
     if not HOLE_RE.fullmatch(hole):
         raise SystemExit(f"invalid hole: {hole}")
     if not LANG_RE.fullmatch(lang):
         raise SystemExit(f"invalid lang: {lang}")
+    if ext is None:
+        ext = EXT_BY_LANG.get(lang)
+        if ext is None:
+            raise SystemExit(f"missing archive extension mapping for language: {lang}")
     if not EXT_RE.fullmatch(ext):
         raise SystemExit(f"invalid ext: {ext}")
 

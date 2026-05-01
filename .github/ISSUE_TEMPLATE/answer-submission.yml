@@ -25,14 +25,6 @@ body:
       placeholder: python
     validations:
       required: true
-  - type: input
-    id: ext
-    attributes:
-      label: File extension
-      description: Archive file extension without a dot, for example `py`.
-      placeholder: py
-    validations:
-      required: true
   - type: textarea
     id: code
     attributes:

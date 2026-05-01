@@ -52,11 +52,11 @@ Open an issue using the **Answer submission** template. Required fields are:
 
 - hole id, for example `fizz-buzz`
 - language id, for example `python`
-- file extension, for example `py`
 - answer code
 
 Notes are optional and stay on the issue only; they are not archived into this
-repository. The workflow computes bytes and sha256 automatically.
+repository. The workflow computes bytes and sha256 automatically and derives the
+archive file extension from the language id.
 
 A maintainer can apply the `verify-request` label to run the official verifier.
 Passing submissions are archived on the `solutions` branch; exact duplicates are

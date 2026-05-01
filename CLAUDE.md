@@ -217,14 +217,13 @@ Preferred public submission path is an Issue labeled by an authorized maintainer
 Issue form fields:
 - `Hole` — code.golf hole id, for example `fizz-buzz`
 - `Language` — code.golf language id, for example `python`
-- `File extension` — extension without a dot, for example `py`
 - `Answer code` — the code to verify
 - `Notes` — optional reviewer context; do not archive notes into the repository
 
 Flow:
 - User opens issue with the **Answer submission** issue template.
 - Authorized maintainer applies `verify-request`.
-- `verify-issue.yml` parses the issue, computes bytes/sha256, verifies with `verify/run.sh`, and archives via `scripts/issue_submission.py`.
+- `verify-issue.yml` parses the issue, computes bytes/sha256, derives the archive file extension from language id, verifies with `verify/run.sh`, and archives via `scripts/issue_submission.py`.
 - Archive writes use optimistic push retry against latest `origin/solutions`; concurrent accepted issues should all eventually land.
 - Successful or duplicate submissions are labeled/commented and closed.
 
