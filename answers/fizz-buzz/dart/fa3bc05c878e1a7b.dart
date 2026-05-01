@@ -1,0 +1,1 @@
+main(){for(var i=1;i<101;i++)print(i%15<1?"FizzBuzz":i%3<1?"Fizz":i%5<1?"Buzz":i);}

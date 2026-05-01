@@ -211,6 +211,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "d"
     },
     {
+      "best": "fa3bc05c878e1a7b",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/dart/index.json",
+      "lang": "dart"
+    },
+    {
       "best": "9ffd8b8f4c1062fa",
       "count": 1,
       "hole": "fizz-buzz",
