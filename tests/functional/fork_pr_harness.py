@@ -144,12 +144,15 @@ def make_branch_name(case: str) -> str:
 
 
 def latest_verify_run(repo: str, title: str) -> dict[str, Any] | None:
+    # Do not pass --workflow here: this pull_request workflow lives on the
+    # non-default solutions branch, and GitHub's name filter can fail to resolve
+    # it even while runs exist. Filter the recent runs client-side instead.
     runs = gh_json([
-        "run", "list", "--repo", repo, "--workflow", "Verify PR", "--limit", "20",
-        "--json", "databaseId,displayTitle,status,conclusion,url",
+        "run", "list", "--repo", repo, "--limit", "50",
+        "--json", "databaseId,workflowName,displayTitle,status,conclusion,url",
     ])
     for run_info in runs:
-        if run_info.get("displayTitle") == title:
+        if run_info.get("workflowName") == "Verify PR" and run_info.get("displayTitle") == title:
             return run_info
     return None
 
