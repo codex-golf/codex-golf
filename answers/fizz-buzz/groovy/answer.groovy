@@ -1,0 +1,1 @@
+(1..100).each{println it%15<1?"FizzBuzz":it%3<1?"Fizz":it%5<1?"Buzz":it}
