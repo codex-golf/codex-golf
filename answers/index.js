@@ -554,6 +554,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "rust"
     },
     {
+      "best": "995013dd752816e2",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/scala/index.json",
+      "lang": "scala"
+    },
+    {
       "best": "f5473acb5b5fffa5",
       "count": 1,
       "hole": "fizz-buzz",

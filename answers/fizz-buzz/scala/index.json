@@ -1,0 +1,20 @@
+{
+  "best": "995013dd752816e2",
+  "entries": [
+    {
+      "bytes": 133,
+      "chars": 133,
+      "id": "995013dd752816e2",
+      "issue": 124,
+      "merged_at": "2026-05-01T09:25:32Z",
+      "meta": "answers/fizz-buzz/scala/995013dd752816e2.meta.json",
+      "path": "answers/fizz-buzz/scala/995013dd752816e2.scala",
+      "pr": null,
+      "sha256": "995013dd752816e2e17c15f6ec5d0a349c2cb51bf982b10505822aecc8db2c5b",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "scala",
+  "schema": "codex-golf.index.v1"
+}

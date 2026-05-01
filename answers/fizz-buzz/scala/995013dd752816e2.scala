@@ -1,0 +1,1 @@
+object M{def main(a:Array[String])=(1 to 100).map(i=>println(if(i%15<1)"FizzBuzz" else if(i%3<1)"Fizz" else if(i%5<1)"Buzz" else i))}
