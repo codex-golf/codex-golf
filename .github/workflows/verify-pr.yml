@@ -1,0 +1,233 @@
+name: Verify PR
+
+on:
+  pull_request:
+    branches: [solutions]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "answers/**"
+
+# Untrusted side: read-only token. Just verify and emit a verdict artifact.
+# Actual labelling / commenting / merging happens in merge-on-verify.yml on main.
+permissions:
+  contents: read
+  pull-requests: read
+
+# Verify itself can run in parallel safely; merge side serialises.
+concurrency:
+  group: verify-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Checkout main verifier
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Checkout upstream mirror
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          path: upstream
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Validate changed file
+        id: scan
+        working-directory: pr
+        run: |
+          set -euo pipefail
+
+          BASE='${{ github.event.pull_request.base.sha }}'
+          HEAD='${{ github.event.pull_request.head.sha }}'
+
+          git fetch origin "$BASE" --depth=1 || true
+
+          ALL="$(git diff --name-only "$BASE" "$HEAD")"
+
+          if [ -z "$ALL" ]; then
+            echo "::error::PR changes nothing"
+            exit 1
+          fi
+
+          COUNT="$(printf '%s\n' "$ALL" | wc -l | tr -d ' ')"
+          if [ "$COUNT" != "1" ]; then
+            echo "::error::PR must change exactly one file, found $COUNT:"
+            printf '%s\n' "$ALL" | sed 's/^/  - /'
+            exit 1
+          fi
+
+          F="$ALL"
+
+          if ! printf '%s\n' "$F" | grep -qE '^answers/[a-z0-9-]+/[a-z0-9-]+/answer\.[a-z0-9]+$'; then
+            echo "::error::changed file must be answers/<hole>/<lang>/answer.<ext>, got: $F"
+            exit 1
+          fi
+
+          STATUS="$(git diff --name-status "$BASE" "$HEAD" -- "$F" | awk '{print $1}')"
+          case "$STATUS" in
+            A|M) ;;
+            *)
+              echo "::error::answer file must be added or modified, got status: $STATUS"
+              exit 1
+              ;;
+          esac
+
+          COMMITS="$(git rev-list --count "$BASE..$HEAD")"
+          if [ "$COMMITS" -gt 5 ]; then
+            echo "::error::PR has $COMMITS commits; please squash to <= 5"
+            exit 1
+          fi
+
+          HOLE="$(printf '%s\n' "$F" | cut -d/ -f2)"
+          LANG="$(printf '%s\n' "$F" | cut -d/ -f3)"
+
+          SIZE="$(wc -c < "$F" | tr -d ' ')"
+          if [ "$SIZE" -gt 16384 ]; then
+            echo "::error::answer file too large: $SIZE bytes, max 16384"
+            exit 1
+          fi
+
+          echo "file=$F"   >> "$GITHUB_OUTPUT"
+          echo "hole=$HOLE" >> "$GITHUB_OUTPUT"
+          echo "lang=$LANG" >> "$GITHUB_OUTPUT"
+          echo "size=$SIZE" >> "$GITHUB_OUTPUT"
+
+      - name: Verify answer
+        id: run
+        env:
+          HOLE: ${{ steps.scan.outputs.hole }}
+          LANG: ${{ steps.scan.outputs.lang }}
+          FILE: ${{ steps.scan.outputs.file }}
+        run: |
+          set -euo pipefail
+          chmod +x main/verify/run.sh
+          # Run with stderr visible; capture stdout to file so we can grep PASS
+          # but still display it. set +e for the call so we can inspect both.
+          set +e
+          main/verify/run.sh "$HOLE" "$LANG" "pr/$FILE" "upstream" > /tmp/verify.out 2> /tmp/verify.err
+          RC=$?
+          set -e
+          echo "=== verify stdout ==="
+          cat /tmp/verify.out
+          echo "=== verify stderr ==="
+          cat /tmp/verify.err
+          echo "=== verify exit: $RC ==="
+          if [ "$RC" != 0 ]; then
+            echo "::error::verify/run.sh failed (exit $RC)"
+            exit "$RC"
+          fi
+          BYTES="$(awk '/^PASS /{print $2}' /tmp/verify.out)"
+          if [ -z "$BYTES" ]; then
+            echo "::error::verify/run.sh did not emit PASS <bytes>"
+            exit 1
+          fi
+          echo "bytes=$BYTES" >> "$GITHUB_OUTPUT"
+
+      - name: Compare against current best
+        id: cmp
+        working-directory: pr
+        env:
+          FILE: ${{ steps.scan.outputs.file }}
+          NEW_BYTES: ${{ steps.run.outputs.bytes }}
+        run: |
+          set -euo pipefail
+          git fetch origin solutions --depth=1
+          if git show "origin/solutions:$FILE" > /tmp/old-answer 2>/dev/null; then
+            OLD_BYTES="$(wc -c < /tmp/old-answer | tr -d ' ')"
+            echo "Current best: $OLD_BYTES bytes"
+            echo "Submitted:    $NEW_BYTES bytes"
+            if [ "$NEW_BYTES" -ge "$OLD_BYTES" ]; then
+              echo "::error::Not shorter than current best: $NEW_BYTES >= $OLD_BYTES"
+              exit 1
+            fi
+            echo "old=$OLD_BYTES" >> "$GITHUB_OUTPUT"
+          else
+            echo "No existing record"
+            echo "old=none" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Emit verdict (success)
+        if: success()
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA:  ${{ github.event.pull_request.head.sha }}
+          BASE_SHA:  ${{ github.event.pull_request.base.sha }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REF:  ${{ github.event.pull_request.base.ref }}
+          AUTHOR:    ${{ github.event.pull_request.user.login }}
+          FILE:      ${{ steps.scan.outputs.file }}
+          HOLE:      ${{ steps.scan.outputs.hole }}
+          LANG:      ${{ steps.scan.outputs.lang }}
+          BYTES:     ${{ steps.run.outputs.bytes }}
+          OLD:       ${{ steps.cmp.outputs.old }}
+          RUN_URL:   ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p verdict
+          cat > verdict/verdict.json <<JSON
+          {
+            "schema": "codex-golf.verdict.v1",
+            "status": "pass",
+            "pr_number": ${PR_NUMBER},
+            "head_sha":  "${HEAD_SHA}",
+            "base_sha":  "${BASE_SHA}",
+            "head_repo": "${HEAD_REPO}",
+            "base_ref":  "${BASE_REF}",
+            "author":    "${AUTHOR}",
+            "file":      "${FILE}",
+            "hole":      "${HOLE}",
+            "lang":      "${LANG}",
+            "bytes":     ${BYTES},
+            "old":       "${OLD}",
+            "run_url":   "${RUN_URL}"
+          }
+          JSON
+          cat verdict/verdict.json
+
+      - name: Emit verdict (failure)
+        if: failure()
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA:  ${{ github.event.pull_request.head.sha }}
+          AUTHOR:    ${{ github.event.pull_request.user.login }}
+          RUN_URL:   ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p verdict
+          cat > verdict/verdict.json <<JSON
+          {
+            "schema": "codex-golf.verdict.v1",
+            "status": "fail",
+            "pr_number": ${PR_NUMBER},
+            "head_sha":  "${HEAD_SHA}",
+            "author":    "${AUTHOR}",
+            "run_url":   "${RUN_URL}"
+          }
+          JSON
+          cat verdict/verdict.json
+
+      - name: Upload verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verdict
+          path: verdict/verdict.json
+          retention-days: 7

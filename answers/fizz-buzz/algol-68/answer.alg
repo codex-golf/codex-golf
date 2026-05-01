@@ -1,0 +1,7 @@
+FOR i TO 100 DO
+    IF i MOD 15 = 0 THEN print(("FizzBuzz", newline))
+    ELIF i MOD 3 = 0 THEN print(("Fizz", newline))
+    ELIF i MOD 5 = 0 THEN print(("Buzz", newline))
+    ELSE print((whole(i, 0), newline))
+    FI
+OD

@@ -1,0 +1,1 @@
+for i:1..100 s="" if i%3==0 s="Fizz" end if i%5==0 s+="Buzz" end if s=="" s=str(i) end print(s) end

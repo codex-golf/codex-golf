@@ -1,0 +1,1 @@
+say$_%15?$_%3?$_%5?$_:Buzz:Fizz:FizzBuzz for 1..100

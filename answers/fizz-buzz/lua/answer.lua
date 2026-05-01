@@ -1,0 +1,1 @@
+for i=1,100 do print(i%15<1 and"FizzBuzz"or i%3<1 and"Fizz"or i%5<1 and"Buzz"or i)end

@@ -1,0 +1,1 @@
+void main(){for(int i=0;i++<100;IO.println((i%3>0?"":"Fizz")+(i%5>0?i%3>0?i:"":"Buzz")));}
