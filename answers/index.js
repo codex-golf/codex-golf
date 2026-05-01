@@ -232,6 +232,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "elixir"
     },
     {
+      "best": "e5c2aad2dd3c1331",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/f-sharp/index.json",
+      "lang": "f-sharp"
+    },
+    {
       "best": "9ffd8b8f4c1062fa",
       "count": 1,
       "hole": "fizz-buzz",
