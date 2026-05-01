@@ -106,6 +106,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "berry"
     },
     {
+      "best": "b93936cc4fc3eaff",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/bqn/index.json",
+      "lang": "bqn"
+    },
+    {
       "best": "197e50460e82fffb",
       "count": 1,
       "hole": "fizz-buzz",
