@@ -1,0 +1,1 @@
+for(i in 1..100){val s=(if(i%3<1) "Fizz" else "")+(if(i%5<1) "Buzz" else "");println(if(s>"") s else i)}

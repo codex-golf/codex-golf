@@ -1,0 +1,20 @@
+{
+  "best": "079a198077e07216",
+  "entries": [
+    {
+      "bytes": 104,
+      "chars": 104,
+      "id": "079a198077e07216",
+      "issue": 101,
+      "merged_at": "2026-05-01T09:24:22Z",
+      "meta": "answers/fizz-buzz/kotlin/079a198077e07216.meta.json",
+      "path": "answers/fizz-buzz/kotlin/079a198077e07216.kt",
+      "pr": null,
+      "sha256": "079a198077e07216387ebd42eb3dde87c3882b3786a055441e4cceb5eb2afc45",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "kotlin",
+  "schema": "codex-golf.index.v1"
+}

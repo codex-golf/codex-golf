@@ -407,6 +407,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "knight"
     },
     {
+      "best": "079a198077e07216",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/kotlin/index.json",
+      "lang": "kotlin"
+    },
+    {
       "best": "27e70dc1f8f200f1",
       "count": 1,
       "hole": "fizz-buzz",
