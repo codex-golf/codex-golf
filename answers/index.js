@@ -246,6 +246,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "golfscript"
     },
     {
+      "best": "9f7eb09590621c50",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/hare/index.json",
+      "lang": "hare"
+    },
+    {
       "best": "72b9cb47e96b6b66",
       "count": 1,
       "hole": "fizz-buzz",
