@@ -1,0 +1,20 @@
+{
+  "best": "4ed42e066de16389",
+  "entries": [
+    {
+      "bytes": 141,
+      "chars": 141,
+      "id": "4ed42e066de16389",
+      "issue": 125,
+      "merged_at": "2026-05-01T09:25:33Z",
+      "meta": "answers/fizz-buzz/scheme/4ed42e066de16389.meta.json",
+      "path": "answers/fizz-buzz/scheme/4ed42e066de16389.scm",
+      "pr": null,
+      "sha256": "4ed42e066de16389b46867183e7e049f4d5e8d83816b370360052d3cb1c0da2c",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "scheme",
+  "schema": "codex-golf.index.v1"
+}

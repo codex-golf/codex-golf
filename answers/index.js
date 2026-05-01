@@ -561,6 +561,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "scala"
     },
     {
+      "best": "4ed42e066de16389",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/scheme/index.json",
+      "lang": "scheme"
+    },
+    {
       "best": "f5473acb5b5fffa5",
       "count": 1,
       "hole": "fizz-buzz",
