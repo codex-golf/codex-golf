@@ -1,0 +1,1 @@
+repeat i 100 [s: "" if 0 = modulo i 3 [s: "Fizz"] if 0 = modulo i 5 [s: rejoin [s "Buzz"]] print either empty? s [i] [s]]
