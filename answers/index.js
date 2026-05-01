@@ -498,6 +498,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "python"
     },
     {
+      "best": "65c14742f242833c",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/qore/index.json",
+      "lang": "qore"
+    },
+    {
       "best": "711c754499dd7018",
       "count": 1,
       "hole": "fizz-buzz",

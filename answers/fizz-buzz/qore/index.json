@@ -1,0 +1,20 @@
+{
+  "best": "65c14742f242833c",
+  "entries": [
+    {
+      "bytes": 84,
+      "chars": 84,
+      "id": "65c14742f242833c",
+      "issue": 115,
+      "merged_at": "2026-05-01T09:24:55Z",
+      "meta": "answers/fizz-buzz/qore/65c14742f242833c.meta.json",
+      "path": "answers/fizz-buzz/qore/65c14742f242833c.qore",
+      "pr": null,
+      "sha256": "65c14742f242833cb62950771cc98d1d736b7659e883ae812ca808709ba62344",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "qore",
+  "schema": "codex-golf.index.v1"
+}
