@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
 """Parse, verify handoff, and archive issue-based submissions.
 
-Issue body format (v1):
+Preferred issue form fields:
 
-    <!-- codex-golf-submission-v1 -->
-    hole: fizz-buzz
-    lang: python
-    ext: py
-    sha256: <64 hex>
+    ### Hole
+    fizz-buzz
 
-    ```answer-base64
-    <base64 of exact answer bytes>
+    ### Language
+    python
+
+    ### File extension
+    py
+
+    ### Answer code
+    ```text
+    exact answer bytes as UTF-8 text
     ```
+
+The workflow computes sha256 itself. Notes are allowed in the issue but are not
+archived. The parser also accepts the older `answer-base64` fenced format for
+exact-byte compatibility.
 """
 from __future__ import annotations
 
@@ -28,7 +36,9 @@ from pathlib import Path
 from typing import Any
 
 FIELD_RE = re.compile(r"^(hole|lang|ext|sha256):\s*(\S+)\s*$", re.MULTILINE)
-FENCE_RE = re.compile(r"```(?:answer-base64|base64)\s*\n(.*?)\n```", re.DOTALL | re.IGNORECASE)
+BASE64_FENCE_RE = re.compile(r"```(?:answer-base64|base64)\s*\n(.*?)\n```", re.DOTALL | re.IGNORECASE)
+CODE_FENCE_RE = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
+HEADING_RE = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
 HOLE_RE = re.compile(r"^[a-z0-9-]+$")
 LANG_RE = re.compile(r"^[a-z0-9-]+$")
 EXT_RE = re.compile(r"^[a-z0-9]+$")
@@ -57,40 +67,70 @@ def load_event(path: str) -> dict[str, Any]:
         return json.load(f)
 
 
+def form_value(body: str, *labels: str) -> str | None:
+    wanted = {label.casefold() for label in labels}
+    matches = list(HEADING_RE.finditer(body))
+    for i, match in enumerate(matches):
+        if match.group(1).strip().casefold() not in wanted:
+            continue
+        start = match.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(body)
+        return body[start:end].strip("\n")
+    return None
+
+
+def required_value(fields: dict[str, str], body: str, key: str, *labels: str) -> str:
+    value = fields.get(key)
+    if value is None:
+        value = form_value(body, *labels)
+    if value is None or not value.strip():
+        raise SystemExit(f"missing required field: {key}")
+    return value.strip()
+
+
+def parse_answer(body: str, provided_sha: str | None) -> tuple[bytes, str]:
+    match = BASE64_FENCE_RE.search(body)
+    if match:
+        encoded = "".join(match.group(1).split())
+        try:
+            answer = base64.b64decode(encoded, validate=True)
+        except Exception as exc:
+            raise SystemExit(f"invalid base64: {exc}") from exc
+    else:
+        section = form_value(body, "Answer code", "Code") or body
+        match = CODE_FENCE_RE.search(section)
+        if not match:
+            raise SystemExit("missing fenced answer code block")
+        answer = match.group(1).encode("utf-8")
+
+    if len(answer) >= MAX_BYTES:
+        raise SystemExit(f"answer too large: {len(answer)} bytes")
+    digest = hashlib.sha256(answer).hexdigest()
+    if provided_sha is not None:
+        provided_sha = provided_sha.lower()
+        if not SHA_RE.fullmatch(provided_sha):
+            raise SystemExit("invalid sha256")
+        if digest != provided_sha:
+            raise SystemExit(f"sha256 mismatch: computed {digest}")
+    return answer, digest
+
+
 def parse_issue(event: dict[str, Any]) -> dict[str, Any]:
     issue = event.get("issue") or {}
     body = issue.get("body") or ""
     fields = dict(FIELD_RE.findall(body))
-    missing = [key for key in ("hole", "lang", "ext", "sha256") if key not in fields]
-    if missing:
-        raise SystemExit("missing required field(s): " + ", ".join(missing))
 
-    hole = fields["hole"]
-    lang = fields["lang"]
-    ext = fields["ext"]
-    sha256 = fields["sha256"].lower()
+    hole = required_value(fields, body, "hole", "Hole")
+    lang = required_value(fields, body, "lang", "Language")
+    ext = required_value(fields, body, "ext", "File extension", "Extension")
     if not HOLE_RE.fullmatch(hole):
         raise SystemExit(f"invalid hole: {hole}")
     if not LANG_RE.fullmatch(lang):
         raise SystemExit(f"invalid lang: {lang}")
     if not EXT_RE.fullmatch(ext):
         raise SystemExit(f"invalid ext: {ext}")
-    if not SHA_RE.fullmatch(sha256):
-        raise SystemExit("invalid sha256")
 
-    match = FENCE_RE.search(body)
-    if not match:
-        raise SystemExit("missing fenced ```answer-base64 block")
-    encoded = "".join(match.group(1).split())
-    try:
-        answer = base64.b64decode(encoded, validate=True)
-    except Exception as exc:
-        raise SystemExit(f"invalid base64: {exc}") from exc
-    if len(answer) >= MAX_BYTES:
-        raise SystemExit(f"answer too large: {len(answer)} bytes")
-    digest = hashlib.sha256(answer).hexdigest()
-    if digest != sha256:
-        raise SystemExit(f"sha256 mismatch: computed {digest}")
+    answer, sha256 = parse_answer(body, fields.get("sha256"))
 
     return {
         "issue_number": int(issue["number"]),

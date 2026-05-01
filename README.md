@@ -79,19 +79,15 @@ Branches:
 
 ## Submit an answer
 
-Open an issue with an exact-byte, base64-encoded answer:
+Open an issue using the **Answer submission** template. Required fields are:
 
-````text
-<!-- codex-golf-submission-v1 -->
-hole: fizz-buzz
-lang: python
-ext: py
-sha256: <64 hex>
+- hole id, for example `fizz-buzz`
+- language id, for example `python`
+- file extension, for example `py`
+- answer code
 
-```answer-base64
-<base64 of exact answer bytes>
-```
-````
+Notes are optional and stay on the issue only; they are not archived into this
+repository. The workflow computes bytes and sha256 automatically.
 
 A maintainer can apply the `verify-request` label to run the official verifier.
 Passing submissions are archived on the `solutions` branch; exact duplicates are

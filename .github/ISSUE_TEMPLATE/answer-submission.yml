@@ -1,0 +1,50 @@
+name: Answer submission
+description: Submit a code.golf answer for verification and archival.
+title: "Answer: <hole>/<language>"
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Submit the exact code you want verified. Maintainers will apply `verify-request` after review.
+
+        Optional notes help reviewers understand the submission, but notes are not archived into the repository.
+  - type: input
+    id: hole
+    attributes:
+      label: Hole
+      description: code.golf hole id, for example `fizz-buzz`.
+      placeholder: fizz-buzz
+    validations:
+      required: true
+  - type: input
+    id: lang
+    attributes:
+      label: Language
+      description: code.golf language id, for example `python`.
+      placeholder: python
+    validations:
+      required: true
+  - type: input
+    id: ext
+    attributes:
+      label: File extension
+      description: Archive file extension without a dot, for example `py`.
+      placeholder: py
+    validations:
+      required: true
+  - type: textarea
+    id: code
+    attributes:
+      label: Answer code
+      description: Paste only the answer code. The workflow computes bytes and sha256 automatically.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Optional reviewer notes. These stay on the issue and are not archived.
+    validations:
+      required: false
