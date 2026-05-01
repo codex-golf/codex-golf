@@ -204,6 +204,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "python"
     },
     {
+      "best": "145ffbbff5bda9d7",
+      "count": 1,
+      "hole": "leap-years",
+      "index": "answers/leap-years/python/index.json",
+      "lang": "python"
+    },
+    {
       "best": "fd7f2fd6f6ea83f6",
       "count": 1,
       "hole": "niven-numbers",

@@ -1,0 +1,19 @@
+{
+  "best": "145ffbbff5bda9d7",
+  "entries": [
+    {
+      "bytes": 47,
+      "chars": 47,
+      "id": "145ffbbff5bda9d7",
+      "merged_at": "2026-05-01T08:02:19Z",
+      "meta": "answers/leap-years/python/145ffbbff5bda9d7.meta.json",
+      "path": "answers/leap-years/python/145ffbbff5bda9d7.py",
+      "pr": 3,
+      "sha256": "145ffbbff5bda9d70aee7c7bea9a66feb0c947f2765aa185361322634f092abf",
+      "was_best": true
+    }
+  ],
+  "hole": "leap-years",
+  "lang": "python",
+  "schema": "codex-golf.index.v1"
+}
