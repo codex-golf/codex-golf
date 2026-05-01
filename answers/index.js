@@ -239,6 +239,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "haskell"
     },
     {
+      "best": "821fcac0f71ff18b",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/hexagony/index.json",
+      "lang": "hexagony"
+    },
+    {
       "best": "4d186b0ce1fa907e",
       "count": 1,
       "hole": "fizz-buzz",

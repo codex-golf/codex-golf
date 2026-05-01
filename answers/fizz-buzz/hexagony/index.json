@@ -1,0 +1,19 @@
+{
+  "best": "821fcac0f71ff18b",
+  "entries": [
+    {
+      "bytes": 92,
+      "chars": 92,
+      "id": "821fcac0f71ff18b",
+      "merged_at": "2026-05-01T08:38:41Z",
+      "meta": "answers/fizz-buzz/hexagony/821fcac0f71ff18b.meta.json",
+      "path": "answers/fizz-buzz/hexagony/821fcac0f71ff18b.hxg",
+      "pr": 32,
+      "sha256": "821fcac0f71ff18b204c179fbaa5dc27ea2f45de1e0c283d064c0f23c68f0b03",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "hexagony",
+  "schema": "codex-golf.index.v1"
+}
