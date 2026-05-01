@@ -1,0 +1,33 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 97,
+  "chars": 97,
+  "ext": "r",
+  "hole": "fizz-buzz",
+  "id": "bb482c3d0220af43",
+  "issue": {
+    "author": "heshenclaw",
+    "number": 116,
+    "url": "https://github.com/codex-golf/codex-golf/issues/116"
+  },
+  "lang": "r",
+  "merged_at": "2026-05-01T09:25:05Z",
+  "path": "answers/fizz-buzz/r/bb482c3d0220af43.r",
+  "schema": "codex-golf.answer.v1",
+  "sha256": "bb482c3d0220af43a7381981262c54ea2fef543446439dd8cac3ded205d478bf",
+  "source": {
+    "kind": "issue"
+  },
+  "submitted_at": null,
+  "verification": {
+    "verifier_ref": "main",
+    "workflow_run_id": "25209528413"
+  }
+}

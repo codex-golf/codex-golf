@@ -1,0 +1,1 @@
+for(i in 1:100)cat(ifelse(i%%15<1,"FizzBuzz",ifelse(i%%3<1,"Fizz",ifelse(i%%5<1,"Buzz",i))),"\n")
