@@ -1,0 +1,20 @@
+{
+  "best": "e46f43e09eedac4a",
+  "entries": [
+    {
+      "bytes": 437,
+      "chars": 437,
+      "id": "e46f43e09eedac4a",
+      "issue": 121,
+      "merged_at": "2026-05-01T09:25:21Z",
+      "meta": "answers/fizz-buzz/rockstar/e46f43e09eedac4a.meta.json",
+      "path": "answers/fizz-buzz/rockstar/e46f43e09eedac4a.rock",
+      "pr": null,
+      "sha256": "e46f43e09eedac4aea20d0aef04b79ef4dbbf01c01b9d15c4001bac9344cc540",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "rockstar",
+  "schema": "codex-golf.index.v1"
+}

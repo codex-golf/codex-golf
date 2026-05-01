@@ -533,6 +533,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "rexx"
     },
     {
+      "best": "e46f43e09eedac4a",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/rockstar/index.json",
+      "lang": "rockstar"
+    },
+    {
       "best": "711c754499dd7018",
       "count": 1,
       "hole": "fizz-buzz",
