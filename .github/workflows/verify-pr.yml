@@ -45,7 +45,7 @@ jobs:
         id: upstream-lock
         run: |
           set -euo pipefail
-          REF="$(awk '$1 == "upstream_ref" { print $2 }' main/VERIFY_LOCK)"
+          REF="$(awk '$1 == "upstream_ref" { print $2 }' main/verify/VERIFY_LOCK)"
           if ! printf '%s\n' "$REF" | grep -Eq '^[0-9a-f]{40}$'; then
             echo "::error::invalid upstream_ref in VERIFY_LOCK: $REF"
             exit 1
