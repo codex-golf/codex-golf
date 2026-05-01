@@ -1,0 +1,1 @@
+main(_)->[io:format("~s~n",[if I rem 15==0->"FizzBuzz";I rem 3==0->"Fizz";I rem 5==0->"Buzz";true->integer_to_list(I)end])||I<-lists:seq(1,100)].
