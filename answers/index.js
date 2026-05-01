@@ -15,6 +15,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "ruby"
     },
     {
+      "best": "fc0ec5710389c9ad",
+      "count": 1,
+      "hole": "divisors",
+      "index": "answers/divisors/python/index.json",
+      "lang": "python"
+    },
+    {
       "best": "09982414979a64f5",
       "count": 1,
       "hole": "evil-numbers",

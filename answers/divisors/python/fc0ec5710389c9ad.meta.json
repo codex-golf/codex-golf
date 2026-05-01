@@ -1,0 +1,38 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 57,
+  "chars": 57,
+  "ext": "py",
+  "hole": "divisors",
+  "id": "fc0ec5710389c9ad",
+  "lang": "python",
+  "merged_at": "2026-05-01T07:56:57Z",
+  "path": "answers/divisors/python/fc0ec5710389c9ad.py",
+  "pr": {
+    "author": "heshenclaw",
+    "base_sha": "68b632f2a4bab2f7482d1dfdd86496056665159a",
+    "head_repo": "heshenclaw/codex-golf-e2e",
+    "head_sha": "8c38155de05815dac79f08bf021882733f3c78c1",
+    "number": 2,
+    "url": "https://github.com/codex-golf/codex-golf/pull/2"
+  },
+  "schema": "codex-golf.answer.v1",
+  "sha256": "fc0ec5710389c9ad32bea6ac47df4bd4544c8dbb45b7e37c9c89b5afa3ba7283",
+  "source": {
+    "kind": "pull_request"
+  },
+  "submitted_at": null,
+  "verification": {
+    "upstream_ref": "master",
+    "verifier_ref": "main",
+    "workflow_run_id": "25207242062",
+    "workflow_run_url": "https://github.com/codex-golf/codex-golf/actions/runs/25207242062"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "best": "fc0ec5710389c9ad",
+  "entries": [
+    {
+      "bytes": 57,
+      "chars": 57,
+      "id": "fc0ec5710389c9ad",
+      "merged_at": "2026-05-01T07:56:57Z",
+      "meta": "answers/divisors/python/fc0ec5710389c9ad.meta.json",
+      "path": "answers/divisors/python/fc0ec5710389c9ad.py",
+      "pr": 2,
+      "sha256": "fc0ec5710389c9ad32bea6ac47df4bd4544c8dbb45b7e37c9c89b5afa3ba7283",
+      "was_best": true
+    }
+  ],
+  "hole": "divisors",
+  "lang": "python",
+  "schema": "codex-golf.index.v1"
+}
