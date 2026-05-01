@@ -1,0 +1,1 @@
+for i<-1..100 do IO.puts(cond do rem(i,15)<1->"FizzBuzz";rem(i,3)<1->"Fizz";rem(i,5)<1->"Buzz";true->i end)end
