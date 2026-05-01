@@ -477,6 +477,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "php"
     },
     {
+      "best": "294828484b5d6e8e",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/picat/index.json",
+      "lang": "picat"
+    },
+    {
       "best": "ab76e57d9b31b3b3",
       "count": 1,
       "hole": "fizz-buzz",

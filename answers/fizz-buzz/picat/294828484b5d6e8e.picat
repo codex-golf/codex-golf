@@ -1,0 +1,7 @@
+main =>
+    foreach (N in 1..100)
+        S = "",
+        if N mod 3 == 0 then S := "Fizz" end,
+        if N mod 5 == 0 then S := S ++ "Buzz" end,
+        println(cond(S == "", to_string(N), S))
+    end.
