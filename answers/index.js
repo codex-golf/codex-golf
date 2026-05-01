@@ -456,6 +456,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "odin"
     },
     {
+      "best": "61662446c7a78190",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/pascal/index.json",
+      "lang": "pascal"
+    },
+    {
       "best": "8a20943d66bf4c6f",
       "count": 1,
       "hole": "fizz-buzz",

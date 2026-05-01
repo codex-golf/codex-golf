@@ -1,0 +1,20 @@
+{
+  "best": "61662446c7a78190",
+  "entries": [
+    {
+      "bytes": 173,
+      "chars": 173,
+      "id": "61662446c7a78190",
+      "issue": 108,
+      "merged_at": "2026-05-01T09:24:40Z",
+      "meta": "answers/fizz-buzz/pascal/61662446c7a78190.meta.json",
+      "path": "answers/fizz-buzz/pascal/61662446c7a78190.pas",
+      "pr": null,
+      "sha256": "61662446c7a781906914c9566902e7df806b9f9bc54804a4ff8542eac37451d8",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "pascal",
+  "schema": "codex-golf.index.v1"
+}
