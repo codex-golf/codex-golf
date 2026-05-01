@@ -470,6 +470,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "perl"
     },
     {
+      "best": "c9009cee6988f99b",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/php/index.json",
+      "lang": "php"
+    },
+    {
       "best": "ab76e57d9b31b3b3",
       "count": 1,
       "hole": "fizz-buzz",
