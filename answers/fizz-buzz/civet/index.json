@@ -1,0 +1,19 @@
+{
+  "best": "dd07c2c5eca60ebc",
+  "entries": [
+    {
+      "bytes": 109,
+      "chars": 109,
+      "id": "dd07c2c5eca60ebc",
+      "merged_at": "2026-05-01T08:17:49Z",
+      "meta": "answers/fizz-buzz/civet/dd07c2c5eca60ebc.meta.json",
+      "path": "answers/fizz-buzz/civet/dd07c2c5eca60ebc.civet",
+      "pr": 8,
+      "sha256": "dd07c2c5eca60ebc13902ba3451943de2aaa73fc6b988fa5fc38bb9c5c277fd0",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "civet",
+  "schema": "codex-golf.index.v1"
+}

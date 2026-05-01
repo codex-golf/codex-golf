@@ -134,6 +134,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "c-sharp"
     },
     {
+      "best": "dd07c2c5eca60ebc",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/civet/index.json",
+      "lang": "civet"
+    },
+    {
       "best": "1e6e804b4429411c",
       "count": 1,
       "hole": "fizz-buzz",
