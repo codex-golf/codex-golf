@@ -1,0 +1,1 @@
+for i in 1..100:echo if i mod 15==0:"FizzBuzz" elif i mod 3==0:"Fizz" elif i mod 5==0:"Buzz" else: $i
