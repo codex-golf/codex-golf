@@ -323,6 +323,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "jq"
     },
     {
+      "best": "3da83d0ebc4efb13",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/knight/index.json",
+      "lang": "knight"
+    },
+    {
       "best": "27e70dc1f8f200f1",
       "count": 1,
       "hole": "fizz-buzz",
