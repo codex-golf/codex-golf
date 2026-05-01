@@ -1,0 +1,19 @@
+{
+  "best": "6155a230e59b14eb",
+  "entries": [
+    {
+      "bytes": 122,
+      "chars": 122,
+      "id": "6155a230e59b14eb",
+      "merged_at": "2026-05-01T08:44:15Z",
+      "meta": "answers/fizz-buzz/haxe/6155a230e59b14eb.meta.json",
+      "path": "answers/fizz-buzz/haxe/6155a230e59b14eb.hx",
+      "pr": 31,
+      "sha256": "6155a230e59b14ebfffd71786c3a4d3be1b55382c9f75a1102f7e3f5b469ed1f",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "haxe",
+  "schema": "codex-golf.index.v1"
+}

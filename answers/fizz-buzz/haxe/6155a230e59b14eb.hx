@@ -1,0 +1,1 @@
+class Main{static function main()for(i in 1...101)Sys.println(i%15<1?"FizzBuzz":i%3<1?"Fizz":i%5<1?"Buzz":Std.string(i));}
