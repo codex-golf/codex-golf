@@ -1,0 +1,119 @@
+name: Reverify all
+
+# Periodically re-verify every entry in solutions/answers/ against current
+# upstream config/hole-answers/. Catches:
+# - upstream changing expected output
+# - lang docker image regressions
+# - our verifier regressing on an existing PASS
+
+on:
+  schedule:
+    - cron: "0 4 * * 0"   # weekly, Sunday 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write   # for opening regression report
+
+concurrency:
+  group: reverify-all
+  cancel-in-progress: true
+
+jobs:
+  reverify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout solutions answers
+        uses: actions/checkout@v4
+        with:
+          ref: solutions
+          path: solutions
+          fetch-depth: 1
+
+      - name: Checkout main verifier
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+          fetch-depth: 1
+
+      - name: Checkout upstream mirror
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          path: upstream
+          fetch-depth: 1
+
+      - name: Reverify every answer
+        id: run
+        run: |
+          set -uo pipefail
+          chmod +x main/verify/run.sh
+
+          PASS=0
+          FAIL=0
+          : > /tmp/regressions.md
+          shopt -s nullglob
+
+          for hole_dir in solutions/answers/*/; do
+            HOLE="$(basename "$hole_dir")"
+            for lang_dir in "$hole_dir"*/; do
+              LANG="$(basename "$lang_dir")"
+              for ans in "$lang_dir"answer.*; do
+                FILE="${ans#solutions/}"
+
+                if OUT="$(main/verify/run.sh "$HOLE" "$LANG" "$ans" "upstream" 2>&1)"; then
+                  PASS=$((PASS+1))
+                  echo "[PASS] $HOLE/$LANG"
+                else
+                  FAIL=$((FAIL+1))
+                  echo "[FAIL] $HOLE/$LANG"
+                  {
+                    echo "### \`$HOLE / $LANG\`"
+                    echo
+                    echo "File: \`$FILE\`"
+                    echo
+                    echo '```'
+                    echo "$OUT" | head -40
+                    echo '```'
+                    echo
+                  } >> /tmp/regressions.md
+                fi
+              done
+            done
+          done
+
+          echo "PASS=$PASS, FAIL=$FAIL"
+          echo "pass=$PASS" >> "$GITHUB_OUTPUT"
+          echo "fail=$FAIL" >> "$GITHUB_OUTPUT"
+
+      - name: File regression issue
+        if: steps.run.outputs.fail != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PASS: ${{ steps.run.outputs.pass }}
+          FAIL: ${{ steps.run.outputs.fail }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          {
+            echo "## Regressions"
+            echo
+            echo "Reverify run found **${FAIL}** failure(s) out of $((PASS+FAIL)) entries."
+            echo "[Run log]($RUN_URL)"
+            echo
+            cat /tmp/regressions.md
+          } > /tmp/issue_body.md
+
+          gh issue create \
+            --repo "$REPO" \
+            --title "Reverify regressions: $FAIL failure(s) on $(date -u +%Y-%m-%d)" \
+            --label reverify-regression \
+            --body-file /tmp/issue_body.md \
+            || gh issue create \
+              --repo "$REPO" \
+              --title "Reverify regressions: $FAIL failure(s) on $(date -u +%Y-%m-%d)" \
+              --body-file /tmp/issue_body.md

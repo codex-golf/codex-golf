@@ -1,0 +1,71 @@
+name: Leaderboard
+
+# Refresh LEADERBOARD.md on solutions, by scanning answers/.
+# Runs:
+# - daily on schedule
+# - manually via workflow_dispatch
+# - whenever the solutions branch gains a new commit (post-merge)
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # 06:00 UTC daily
+  workflow_dispatch:
+  push:
+    branches: [solutions]
+    paths:
+      - "answers/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: leaderboard
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout solutions (with history)
+        uses: actions/checkout@v4
+        with:
+          ref: solutions
+          fetch-depth: 100
+
+      - name: Checkout main scripts
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: _main
+          fetch-depth: 1
+
+      - name: Generate LEADERBOARD.md
+        run: |
+          set -euo pipefail
+          python3 _main/scripts/leaderboard.py . LEADERBOARD.md
+          head -20 LEADERBOARD.md
+
+      - name: Commit if changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # Use github-actions[bot] identity so the commit doesn't masquerade as a person.
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Stage first so untracked files are also detected as changes.
+          git add LEADERBOARD.md
+          if git diff --cached --quiet -- LEADERBOARD.md; then
+            echo "No leaderboard changes"
+            exit 0
+          fi
+
+          git commit -m "leaderboard: refresh ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+
+          # Push back. Default GITHUB_TOKEN can push to default branch and other
+          # branches with contents:write.
+          git push origin HEAD:solutions
