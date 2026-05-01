@@ -60,6 +60,7 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
+          gh label create reverify-regression --repo "$REPO" --color D73A4A --description "Archived answer failed reverify" || true
           {
             echo "## Regressions"
             echo
@@ -73,8 +74,10 @@ jobs:
             --repo "$REPO" \
             --title "Reverify regressions: $FAIL failure(s) on $(date -u +%Y-%m-%d)" \
             --label reverify-regression \
-            --body-file /tmp/issue_body.md \
-            || gh issue create \
-              --repo "$REPO" \
-              --title "Reverify regressions: $FAIL failure(s) on $(date -u +%Y-%m-%d)" \
-              --body-file /tmp/issue_body.md
+            --body-file /tmp/issue_body.md
+
+      - name: Fail on regressions
+        if: steps.run.outputs.fail != '0'
+        run: |
+          echo "::error::Reverify found ${{ steps.run.outputs.fail }} regression(s)."
+          exit 1

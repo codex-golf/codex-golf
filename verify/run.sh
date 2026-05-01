@@ -20,7 +20,10 @@ IMAGE="$(jq -r --arg l "$LANG" '.[$l].image // empty' "$LANGS_JSON")"
 [ -n "$IMAGE" ] || { echo "::error::no image configured for lang: $LANG"; exit 1; }
 
 BASENAME="$(basename "$SOL")"
-[ "$BASENAME" = "answer.$EXT" ] || { echo "::error::filename must be answer.$EXT for lang=$LANG (got $BASENAME)"; exit 1; }
+case "$BASENAME" in
+  *."$EXT") ;;
+  *) echo "::error::filename extension must be .$EXT for lang=$LANG (got $BASENAME)"; exit 1 ;;
+esac
 
 WORKDIR="$(mktemp -d)"
 trap 'rm -rf "$WORKDIR"' EXIT
