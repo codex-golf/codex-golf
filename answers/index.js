@@ -218,6 +218,13 @@ globalThis.CODEX_GOLF_INDEX = {
       "lang": "dart"
     },
     {
+      "best": "156d60e35c85d764",
+      "count": 1,
+      "hole": "fizz-buzz",
+      "index": "answers/fizz-buzz/egel/index.json",
+      "lang": "egel"
+    },
+    {
       "best": "9ffd8b8f4c1062fa",
       "count": 1,
       "hole": "fizz-buzz",

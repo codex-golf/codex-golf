@@ -1,0 +1,11 @@
+import "prelude.eg"
+using System
+using List
+
+def fb = 
+    [N -> if N%15 == 0 then "FizzBuzz"
+          else if N%3 == 0 then "Fizz"
+          else if N%5 == 0 then "Buzz"
+          else to_text N]
+
+def main = foldl [_ N -> print (fb N) "\n"] 0 (from_to 1 100)

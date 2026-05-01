@@ -1,0 +1,20 @@
+{
+  "best": "156d60e35c85d764",
+  "entries": [
+    {
+      "bytes": 261,
+      "chars": 261,
+      "id": "156d60e35c85d764",
+      "issue": 73,
+      "merged_at": "2026-05-01T09:22:30Z",
+      "meta": "answers/fizz-buzz/egel/156d60e35c85d764.meta.json",
+      "path": "answers/fizz-buzz/egel/156d60e35c85d764.egel",
+      "pr": null,
+      "sha256": "156d60e35c85d764848bc8c601b7b22660e68834564f30579de272c7df32a7bc",
+      "was_best": true
+    }
+  ],
+  "hole": "fizz-buzz",
+  "lang": "egel",
+  "schema": "codex-golf.index.v1"
+}

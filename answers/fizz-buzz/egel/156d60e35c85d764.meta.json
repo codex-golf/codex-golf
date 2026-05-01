@@ -1,0 +1,33 @@
+{
+  "best": {
+    "improvement_bytes": null,
+    "improvement_chars": null,
+    "previous_best_bytes": null,
+    "previous_best_chars": null,
+    "previous_best_id": null,
+    "was_best": true
+  },
+  "bytes": 261,
+  "chars": 261,
+  "ext": "egel",
+  "hole": "fizz-buzz",
+  "id": "156d60e35c85d764",
+  "issue": {
+    "author": "heshenclaw",
+    "number": 73,
+    "url": "https://github.com/codex-golf/codex-golf/issues/73"
+  },
+  "lang": "egel",
+  "merged_at": "2026-05-01T09:22:30Z",
+  "path": "answers/fizz-buzz/egel/156d60e35c85d764.egel",
+  "schema": "codex-golf.answer.v1",
+  "sha256": "156d60e35c85d764848bc8c601b7b22660e68834564f30579de272c7df32a7bc",
+  "source": {
+    "kind": "issue"
+  },
+  "submitted_at": null,
+  "verification": {
+    "verifier_ref": "main",
+    "workflow_run_id": "25209466365"
+  }
+}
