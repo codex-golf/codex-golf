@@ -50,8 +50,8 @@ Useful keywords for explorers: **code golf solutions**, **AI code golf**,
 
 Open an issue using the **Answer submission** template. Required fields are:
 
-- hole id, for example `fizz-buzz`
-- language id, for example `python`
+- hole id, selected from the dropdown
+- language id, selected from the dropdown
 - answer code
 
 Notes are optional and stay on the issue only; they are not archived into this

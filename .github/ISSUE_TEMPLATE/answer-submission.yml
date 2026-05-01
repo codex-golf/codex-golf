@@ -9,20 +9,218 @@ body:
         Submit the exact code you want verified. Maintainers will apply `verify-request` after review.
 
         Optional notes help reviewers understand the submission, but notes are not archived into the repository.
-  - type: input
+  - type: dropdown
     id: hole
     attributes:
       label: Hole
-      description: code.golf hole id, for example `fizz-buzz`.
-      placeholder: fizz-buzz
+      description: code.golf hole id.
+      options:
+        - 12-days-of-christmas
+        - 24-game
+        - 99-bottles-of-beer
+        - abundant-numbers
+        - alphabetic-numbers
+        - apérys-constant
+        - arabic-to-roman
+        - arithmetic-numbers
+        - ascending-primes
+        - ascii-table
+        - binary-lambda-calculus
+        - card-number-validation
+        - catalan-numbers
+        - catalans-constant
+        - christmas-trees
+        - connect-four
+        - continued-fractions
+        - css-colors
+        - css-grid
+        - day-of-week
+        - dfa-simulator
+        - dragon-curve
+        - ellipse-perimeters
+        - emirp-numbers
+        - evil-numbers
+        - factorial-factorisation
+        - farey-sequence
+        - fizz-buzz
+        - floyd-steinberg-dithering
+        - forsyth-edwards-notation
+        - game-of-life
+        - gijswijts-sequence
+        - gray-code-decoder
+        - happy-numbers
+        - hexagonal-spiral
+        - highly-composite-numbers
+        - hilbert-curve
+        - huffman-encoder
+        - inventory-sequence
+        - jacobi-symbol
+        - kaprekar-numbers
+        - kolakoski-constant
+        - leap-years
+        - levenshtein-distance
+        - leyland-numbers
+        - ln-2
+        - look-and-say
+        - lucky-numbers
+        - lucky-tickets
+        - medal-tally
+        - morse-decoder
+        - multitap-input
+        - musical-chords
+        - n-queens
+        - nfa-simulator
+        - niven-numbers
+        - number-spiral
+        - odd-polyomino-tiling
+        - ordinal-numbers
+        - p-adic-expansion
+        - pangram-grep
+        - partition-numbers
+        - pascals-triangle
+        - pernicious-numbers
+        - polygon-triangulations
+        - prime-numbers
+        - proximity-grid
+        - qr-decoder
+        - quadratic-formula
+        - recamán
+        - rectangle-fill
+        - repeating-decimals
+        - reverse-polish-notation
+        - rijndael-s-box
+        - rule-110
+        - scrambled-sort
+        - semiprime-numbers
+        - seven-segment
+        - si-units
+        - sierpiński-triangle
+        - smith-numbers
+        - smooth-numbers
+        - spelling-numbers
+        - sphenic-numbers
+        - star-wars-gpt
+        - star-wars-opening-crawl
+        - taxicab-numbers
+        - ten-pin-bowling
+        - time-distance
+        - topological-sort
+        - tower-of-hanoi
+        - transpose-sentence
+        - united-states
+        - vampire-numbers
+        - van-eck-sequence
+        - zeckendorf-representation
+        - zodiac-signs
+        - γ
+        - λ
+        - π
+        - φ
+        - √2
+        - 𝑒
     validations:
       required: true
-  - type: input
+  - type: dropdown
     id: lang
     attributes:
       label: Language
-      description: code.golf language id, for example `python`.
-      placeholder: python
+      description: code.golf language id.
+      options:
+        - 05ab1e
+        - algol-68
+        - apl
+        - arkscript
+        - arturo
+        - assembly
+        - awk
+        - bash
+        - basic
+        - befunge
+        - berry
+        - bqn
+        - brainfuck
+        - c
+        - c-sharp
+        - civet
+        - cjam
+        - clojure
+        - cobol
+        - coconut
+        - coffeescript
+        - common-lisp
+        - cpp
+        - crystal
+        - d
+        - dart
+        - egel
+        - elixir
+        - erlang
+        - f-sharp
+        - factor
+        - fennel
+        - fish
+        - forth
+        - fortran
+        - gleam
+        - go
+        - golfscript
+        - groovy
+        - harbour
+        - hare
+        - haskell
+        - haxe
+        - hexagony
+        - hush
+        - hy
+        - iogii
+        - j
+        - janet
+        - java
+        - javascript
+        - jq
+        - julia
+        - k
+        - knight
+        - kotlin
+        - lily
+        - lua
+        - luau
+        - nim
+        - ocaml
+        - odin
+        - pascal
+        - perl
+        - php
+        - picat
+        - powershell
+        - prolog
+        - python
+        - qore
+        - r
+        - racket
+        - raku
+        - rebol
+        - rexx
+        - rockstar
+        - ruby
+        - rust
+        - scala
+        - scheme
+        - sed
+        - sql
+        - squirrel
+        - stax
+        - swift
+        - tcl
+        - tex
+        - uiua
+        - umka
+        - v
+        - vala
+        - viml
+        - vyxal
+        - wren
+        - zig
     validations:
       required: true
   - type: textarea

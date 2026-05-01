@@ -36,7 +36,7 @@ FIELD_RE = re.compile(r"^(hole|lang|ext|sha256):\s*(\S+)\s*$", re.MULTILINE)
 BASE64_FENCE_RE = re.compile(r"```(?:answer-base64|base64)\s*\n(.*?)\n```", re.DOTALL | re.IGNORECASE)
 CODE_FENCE_RE = re.compile(r"```[^\n]*\n(.*?)\n```", re.DOTALL)
 HEADING_RE = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
-HOLE_RE = re.compile(r"^[a-z0-9-]+$")
+HOLE_RE = re.compile(r"^[^/\x00]+$")
 LANG_RE = re.compile(r"^[a-z0-9-]+$")
 EXT_RE = re.compile(r"^[a-z0-9]+$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -215,7 +215,7 @@ def parse_issue(event: dict[str, Any]) -> dict[str, Any]:
     hole = required_value(fields, body, "hole", "Hole")
     lang = required_value(fields, body, "lang", "Language")
     ext = fields.get("ext")
-    if not HOLE_RE.fullmatch(hole):
+    if not HOLE_RE.fullmatch(hole) or hole in {".", ".."}:
         raise SystemExit(f"invalid hole: {hole}")
     if not LANG_RE.fullmatch(lang):
         raise SystemExit(f"invalid lang: {lang}")

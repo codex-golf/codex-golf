@@ -215,13 +215,14 @@ Public identity:
 Preferred public submission path is an Issue labeled by an authorized maintainer.
 
 Issue form fields:
-- `Hole` — code.golf hole id, for example `fizz-buzz`
-- `Language` — code.golf language id, for example `python`
+- `Hole` — code.golf hole id dropdown generated from upstream `config/data/holes.toml`
+- `Language` — code.golf language id dropdown generated from upstream `docker/live.Dockerfile`
 - `Answer code` — the code to verify
 - `Notes` — optional reviewer context; do not archive notes into the repository
 
 Flow:
 - User opens issue with the **Answer submission** issue template.
+- Keep dropdown options in sync when upstream adds/removes holes or languages.
 - Authorized maintainer applies `verify-request`.
 - `verify-issue.yml` parses the issue, computes bytes/sha256, derives the archive file extension from language id, verifies with `verify/run.sh`, and archives via `scripts/issue_submission.py`.
 - Archive writes use optimistic push retry against latest `origin/solutions`; concurrent accepted issues should all eventually land.
